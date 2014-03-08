@@ -6,7 +6,6 @@
 {ImpossibleMission} = require './impossible'
 
 exports.run = ->
-  console.log ROT
   # https://www.youtube.com/watch?v=FrLequ6dUdM
   if isMSIE()
     window.location.href = 'http://donotuseie.com/'
