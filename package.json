@@ -1,0 +1,41 @@
+{
+    "name": "elvin-rl",
+    "version": "0.0.1",
+    "author": "Patrick Meade <veloxi@ticon.net>",
+    "description": "Mission Impossible themed Roguelike written in CoffeeScript and using rot.js",
+    "scripts": {
+        "start": "firefox ElvinRL.html"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/blinkdog/elvin-atombender.git"
+    },
+    "keywords": [
+	"7DRL",
+	"atombender",
+	"coffeescript",
+	"elvin",
+	"game",
+	"html5",
+	"impossible",
+	"javascript",
+	"mission",
+	"robot",
+	"rogue",
+	"roguelike",
+	"rot",
+	"rot.js"
+    ],
+    "dependencies": {
+    },
+    "devDependencies": {
+        "browserify": "3.32.x",
+        "coffee-script": "1.7.x",
+        "mocha": "1.17.x",
+	"should": "3.1.x"
+    },
+    "license" : "Copyright 2014 Patrick Meade. All rights reserved.",
+    "engines": {
+        "node": "0.10.x"
+    }
+}

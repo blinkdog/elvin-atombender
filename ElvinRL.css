@@ -1,0 +1,19 @@
+/*
+ * ElvinRL.css
+ * Copyright 2014 Patrick Meade. All rights reserved.
+ */
+
+body {
+    background-color: #000;
+    font-family: droid sans mono, monospace;
+    font-size: 16px;
+    margin: 0;
+}
+
+canvas {
+    display: block;
+    margin: auto;
+}
+
+/* end of ElvinRL.css */
+
