@@ -6,6 +6,7 @@ FortressLayout = require './layout'
 FortressMap = require './map'
 {GameState} = require './state'
 {GUI} = require './gui'
+{SoundBoard} = require './sfx'
 
 class ImpossibleMission
   constructor: ->
@@ -15,12 +16,16 @@ class ImpossibleMission
     @map = FortressMap.generateFortress @layout
     @state = new GameState @layout, @map
 
+    @sfx = new SoundBoard()
+    @sfx.init()
+
     @gui = new GUI()
     @gui.init()
     @gui.handleEvent()
     @gui.render @state
 
-    setTimeout @tick, 1000
+    @sfx.playSound 'another-visitor'
+    setTimeout @state.startGame, 7000
 
   tick: =>
     if @state.getTimeLeft() > 0

@@ -8,3 +8,6 @@
 * 2014-03-09-1200 - Simple display of fortress map
 * 2014-03-09-1250 - Uploaded teaser screenshot with no useful information
 * 2014-03-09-1300 - Using rot.js FOV routines for fortress map display
+* 2014-03-09-1425 - Hookah Break
+* 2014-03-09-1655 - "Another visitor. Stay awhile... stay forever!"
+* 2014-03-09-1735 - Daughter Transportation Break

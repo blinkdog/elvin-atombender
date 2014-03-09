@@ -10,12 +10,18 @@ TIME_LIMIT = 6 * MIN_PER_HOUR * SEC_PER_MIN * MILLI_PER_SEC
 class GameState
   constructor: (@layout, @map) ->
     @player = {x:20, y:14}
-    @started = Date.now()
-    @timeLimit = @started + TIME_LIMIT
-    
+    @started = false
+
   getTimeLeft: ->
-    return Math.floor((@timeLimit - Date.now()) / MILLI_PER_SEC)
-  
+    if @started
+      return Math.floor((@timeLimit - Date.now()) / MILLI_PER_SEC)
+    return result = Math.floor(TIME_LIMIT / MILLI_PER_SEC)
+
+  startGame: =>
+    @started = true
+    @timeLimit = Date.now() + TIME_LIMIT
+    setTimeout window.game.tick, 1
+
 exports.GameState = GameState
 
 #----------------------------------------------------------------------
