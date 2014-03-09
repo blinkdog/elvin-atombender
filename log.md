@@ -7,3 +7,4 @@
 * 2014-03-08-2335 - Sleep Break
 * 2014-03-09-1200 - Simple display of fortress map
 * 2014-03-09-1250 - Uploaded teaser screenshot with no useful information
+* 2014-03-09-1300 - Using rot.js FOV routines for fortress map display

@@ -14,12 +14,19 @@ class ImpossibleMission
     @layout = FortressLayout.generateFortress()
     @map = FortressMap.generateFortress @layout
     @state = new GameState @layout, @map
-    
+
     @gui = new GUI()
     @gui.init()
     @gui.handleEvent()
     @gui.render @state
-  
+
+    setTimeout @tick, 1000
+
+  tick: =>
+    if @state.getTimeLeft() > 0
+      setTimeout @tick, 1000
+    @gui.render @state
+    
 exports.ImpossibleMission = ImpossibleMission
 
 #----------------------------------------------------------------------
