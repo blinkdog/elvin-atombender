@@ -29,14 +29,14 @@ exports.addEntryRoom = (layout) ->
 
 exports.addRoom = (layout, src, dir, tunType, roomType) ->
   newLayout = cloneLayout layout
-  srcLayoutX = src.x*2+1
-  srcLayoutY = src.y*2+1
-  tunLayoutX = srcLayoutX+dir.x*1
-  tunLayoutY = srcLayoutY+dir.y*1
-  newLayout[tunLayoutY][tunLayoutX] = tunType
-  roomLayoutX = srcLayoutX+dir.x*2
-  roomLayoutY = srcLayoutY+dir.y*2
-  newLayout[roomLayoutY][roomLayoutX] = roomType
+  layoutX = src.x*2+1
+  layoutY = src.y*2+1
+  tunnelX = layoutX+dir.x*1
+  tunnelY = layoutY+dir.y*1
+  newLayout[tunnelY][tunnelX] = tunType
+  roomX = layoutX+dir.x*2
+  roomY = layoutY+dir.y*2
+  newLayout[roomY][roomX] = roomType
   return newLayout
 
 exports.countRooms = (layout) ->
@@ -52,35 +52,37 @@ exports.expandibleRooms = (layout) ->
   expandibles = []
   for i in [0..FORTRESS_SIZE.height-1]
     for j in [0..FORTRESS_SIZE.width-1]
-      roomType = layout[i*2+1][j*2+1]
+      layoutX = j*2+1
+      layoutY = i*2+1
+      roomType = layout[layoutY][layoutX]
       if (roomType is 'E') or (roomType is 'R')
-        north = layout[i*2][j*2+1]
+        north = layout[layoutY-1][layoutX]
         if (north is 'X')
-          north2 = layout[i*2-1][j*2+1]
+          north2 = layout[layoutY-2][layoutX]
           if (north2 is 'X')
-            expandibles.push {src:{x:j,y:i}, dir:{x:0,y:-1}, replace:north}
-        south = layout[i*2+2][j*2+1]
+            expandibles.push {src:{x:j,y:i}, dir:{x:0,y:-1}}
+        south = layout[layoutY+1][layoutX]
         if (south is 'X')
-          south2 = layout[i*2+3][j*2+1]
+          south2 = layout[layoutY+2][layoutX]
           if (south2 is 'X')
-            expandibles.push {src:{x:j,y:i}, dir:{x:0,y:1}, replace:south}
-        east = layout[i*2+1][j*2+2]
+            expandibles.push {src:{x:j,y:i}, dir:{x:0,y:1}}
+        east = layout[layoutY][layoutX+1]
         if (east is 'X')
-          east2 = layout[i*2+1][j*2+3]
+          east2 = layout[layoutY][layoutX+2]
           if (east2 is 'X')
-            expandibles.push {src:{x:j,y:i}, dir:{x:1,y:0}, replace:east}
-        west = layout[i*2+1][j*2]
+            expandibles.push {src:{x:j,y:i}, dir:{x:1,y:0}}
+        west = layout[layoutY][layoutX-1]
         if (west is 'X')
-          west2 = layout[i*2+1][j*2]
+          west2 = layout[layoutY][layoutX-2]
           if (west2 is 'X')
-            expandibles.push {src:{x:j,y:i}, dir:{x:-1,y:0}, replace:west}
+            expandibles.push {src:{x:j,y:i}, dir:{x:-1,y:0}}
   return expandibles
 
 exports.generateFortress = ->
   layout = exports.create()
   layout = exports.initialize layout
   layout = exports.addEntryRoom layout
-  while exports.countRooms(layout) < 31
+  while (exports.countRooms(layout) < 31)
     expandibles = exports.expandibleRooms layout
     expandible = expandibles.random()
     layout = exports.addRoom layout, expandible.src, expandible.dir, exports.TUNNEL_TYPE.random(), 'R'
@@ -91,13 +93,7 @@ exports.generateFortress = ->
 
 # -----------------------------------------------------------
 
-cloneLayout = (layout) ->
-  newLayout = []
-  for i in [0..layout.length-1]
-    newLayout[i] = []
-    for j in [0..layout[i].length-1]
-      newLayout[i][j] = layout[i][j]
-  return newLayout
+cloneLayout = (layout) -> layout.slice 0
 
 #----------------------------------------------------------------------
 # end of layout.coffee
