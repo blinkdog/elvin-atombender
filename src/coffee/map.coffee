@@ -18,6 +18,11 @@ exports.addLayout = (map, layout) ->
       addBlock newMap, j*ROOM_SIZE.width, i*ROOM_SIZE.height, layout[i][j], i%2
   return newMap
 
+exports.generateFortress = (layout) ->
+  newMap = exports.create layout
+  newMap = exports.addLayout newMap, layout
+  return newMap
+
 #------------------------------------------------------------
 
 cloneMap = (map) -> map.slice 0
