@@ -2,7 +2,7 @@
     "name": "elvin-rl",
     "version": "0.0.1",
     "author": "Patrick Meade <veloxi@ticon.net>",
-    "description": "Mission Impossible themed Roguelike written in CoffeeScript and using rot.js",
+    "description": "Impossible Mission themed Roguelike written in CoffeeScript and using rot.js",
     "scripts": {
         "start": "firefox ElvinRL.html"
     },

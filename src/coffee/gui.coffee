@@ -74,11 +74,23 @@ class GUI
     # render the player into the display
     @display.draw centerX, centerY, '@', '#fff', '#000'
     # render the timer bar at the bottom
+    @renderTime state
+
+  renderTime: (state) ->
+    # define some time savers
+    centerX = Math.floor DISPLAY_SIZE.width / 2
+    centerY = Math.floor DISPLAY_SIZE.height / 2
+    dispW = DISPLAY_SIZE.width-1
+    dispH = DISPLAY_SIZE.height-1
+    {map, player} = state
+    # render the timer bar at the bottom
     @fillRect 0, dispH, dispW, dispH, ' ', '#fff', '#000'
     timeDisp = formatTime state.getTimeLeft()
     timeLeft = "%c{cyan}" + timeDisp[0] + "%c{yellow}:%c{cyan}" + timeDisp[1] + "%c{yellow}:%c{cyan}" + timeDisp[2]
     @display.drawText dispW-7, dispH, timeLeft
-    
+    pocketComputer = "%c{yellow}[%c{cyan}M%c{yellow}]%c{cyan}1A9366b"
+    @display.drawText 0, dispH, pocketComputer
+
   fillRect: (x1, y1, x2, y2, ch, fg, bg) ->
     for y in [y1..y2]
       for x in [x1..x2]

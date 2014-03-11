@@ -11,3 +11,10 @@
 * 2014-03-09-1425 - Hookah Break
 * 2014-03-09-1655 - "Another visitor. Stay awhile... stay forever!"
 * 2014-03-09-1735 - Daughter Transportation Break
+* 2014-03-09-1900 - Headache; Sleep Break
+* 2014-03-10-0600 - Work Break
+* 2014-03-10-1600 - [Zimbrick Honda] Moving around the map
+* 2014-03-10-1650 - Driving Break
+* 2014-03-10-1855 - Moving around the map, cont'd.
+* 2014-03-10-2000 - Git Commit/Push
+* 2014-03-10-2005 - Laundry Break

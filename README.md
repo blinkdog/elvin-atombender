@@ -20,4 +20,3 @@ launch the game in Mozilla Firefox:
 
 If you modify package.json in the root directory, you can change the browser
 used to launch the game.
-

@@ -6,7 +6,10 @@ FortressLayout = require './layout'
 FortressMap = require './map'
 {GameState} = require './state'
 {GUI} = require './gui'
+{ROT} = require './rot.min'
 {SoundBoard} = require './sfx'
+
+{BeginGame} = require './actor/begin'
 
 class ImpossibleMission
   constructor: ->
@@ -23,14 +26,17 @@ class ImpossibleMission
     @gui.init()
     @gui.handleEvent()
     @gui.render @state
-
-    @sfx.playSound 'another-visitor'
-    setTimeout @state.startGame, 7000
+    
+    @scheduler = new ROT.Scheduler.Speed()
+    @scheduler.add new BeginGame(), false
+    
+    @engine = new ROT.Engine @scheduler
+    @engine.start()
 
   tick: =>
     if @state.getTimeLeft() > 0
       setTimeout @tick, 1000
-    @gui.render @state
+    @gui.renderTime @state
     
 exports.ImpossibleMission = ImpossibleMission
 
