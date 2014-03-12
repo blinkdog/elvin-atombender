@@ -15,6 +15,9 @@ class ImpossibleMission
   constructor: ->
   
   run: ->
+    @scheduler = new ROT.Scheduler.Speed()
+    @scheduler.add new BeginGame(), false
+    
     @layout = FortressLayout.generateFortress()
     @map = FortressMap.generateFortress @layout
     @state = new GameState @layout, @map
@@ -26,9 +29,6 @@ class ImpossibleMission
     @gui.init()
     @gui.handleEvent()
     @gui.render @state
-    
-    @scheduler = new ROT.Scheduler.Speed()
-    @scheduler.add new BeginGame(), false
     
     @engine = new ROT.Engine @scheduler
     @engine.start()

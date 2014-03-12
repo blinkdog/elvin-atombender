@@ -71,6 +71,9 @@ class GUI
           if (mapY >= 0) and (mapY < map.length)
             if (visibleMap[mapY][mapX] is VISIBLE)
               @display.draw j, i, map[mapY][mapX], '#888', '#000'
+              objHere = state.getObjectsAt mapX, mapY
+              for obj in objHere
+                @display.draw j, i, obj.ch, obj.fg, obj.bg
     # render the player into the display
     @display.draw centerX, centerY, '@', '#fff', '#000'
     # render the timer bar at the bottom
