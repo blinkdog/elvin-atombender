@@ -35,8 +35,10 @@ class ImpossibleMission
 
   tick: =>
     return if @state.finished?
-    if @state.getTimeLeft() > 0
-      setTimeout @tick, 1000
+    if @state.getTimeLeft() <= 0
+      @state.endGameLose()
+      return
+    setTimeout @tick, 1000
     @gui.renderTime @state
     
 exports.ImpossibleMission = ImpossibleMission

@@ -5,12 +5,8 @@
 ** Search all files for "console"
 
 # Development TO DO
-* [X] Modify handleEvent in Player to add a 'use' command triggered by VK_SPACE
-* [X] Modify GameState to add a win-by-unlock method
-** [X] Testing of winning
-*** [X] Room with computers, Red '@', "No.. no.. no!"
-* Modify GameState to add a lose-by-clock method
-** Testing of losing
+* [X] Modify GameState to add a lose-by-clock method
+** [X] Testing of losing
 * Add colors to rooms and corridors
 ** Research: Actual colors from IM rooms?
 * Modify handleEvent in Player to add a 'Pocket Computer' command

@@ -5,13 +5,17 @@
 MIN_PER_HOUR = 60
 SEC_PER_MIN = 60
 MILLI_PER_SEC = 1000
-TIME_LIMIT = 6 * MIN_PER_HOUR * SEC_PER_MIN * MILLI_PER_SEC
+# DEBUG: Shorter time limit for testing purposes
+#TIME_LIMIT = 6 * MIN_PER_HOUR * SEC_PER_MIN * MILLI_PER_SEC
+
+TIME_LIMIT = 1 * SEC_PER_MIN * MILLI_PER_SEC
 
 Map = require './map'
 {ROOM_SIZE} = require './map'
 {AccessPanel} = require './actor/access'
 {Elvin} = require './actor/atombender'
 {MissionAccomplished} = require './actor/endWin'
+{MissionFailed} = require './actor/endLose'
 {Player} = require './actor/player'
 {Terminal} = require './actor/terminal'
 
@@ -39,6 +43,12 @@ class GameState
     window.game.scheduler.clear()
     window.game.scheduler.add new MissionAccomplished()
     window.game.engine.unlock()
+
+  endGameLose: =>
+    @finished = true
+    window.game.gui.render this
+    window.game.scheduler.clear()
+    window.game.scheduler.add new MissionFailed()
 
   unlockDoor: =>
     # we've won, no need for more actions

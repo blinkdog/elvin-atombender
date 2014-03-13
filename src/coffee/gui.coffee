@@ -86,13 +86,18 @@ class GUI
     dispW = DISPLAY_SIZE.width-1
     dispH = DISPLAY_SIZE.height-1
     {map, player} = state
-    # render the timer bar at the bottom
+    # make room to display some status stuff at the bottom
     @fillRect 0, dispH, dispW, dispH, ' ', '#fff', '#000'
-    timeDisp = formatTime state.getTimeLeft()
-    timeLeft = "%c{cyan}" + timeDisp[0] + "%c{yellow}:%c{cyan}" + timeDisp[1] + "%c{yellow}:%c{cyan}" + timeDisp[2]
-    @display.drawText dispW-7, dispH, timeLeft
+    # render the name of the pocket computer at the bottom
     pocketComputer = "%c{yellow}[%c{cyan}M%c{yellow}]%c{cyan}1A9366b"
     @display.drawText 0, dispH, pocketComputer
+    # render the time remaining at the bottom
+    if state.finished?
+      timeLeft = "%c{cyan}00%c{yellow}:%c{cyan}00%c{yellow}:%c{cyan}00"
+    else
+      timeDisp = formatTime state.getTimeLeft()
+      timeLeft = "%c{cyan}" + timeDisp[0] + "%c{yellow}:%c{cyan}" + timeDisp[1] + "%c{yellow}:%c{cyan}" + timeDisp[2]
+    @display.drawText dispW-7, dispH, timeLeft
 
   fillRect: (x1, y1, x2, y2, ch, fg, bg) ->
     for y in [y1..y2]
