@@ -8,6 +8,7 @@ MILLI_PER_SEC = 1000
 TIME_LIMIT = 6 * MIN_PER_HOUR * SEC_PER_MIN * MILLI_PER_SEC
 
 {ROOM_SIZE} = require './map'
+{AccessPanel} = require './actor/access'
 {Player} = require './actor/player'
 {Terminal} = require './actor/terminal'
 
@@ -29,12 +30,11 @@ class GameState
     window.game.engine.unlock()
 
   initObjects: ->
-    alert 'initObjects'
     @objects = []
     @initSecurityTerminals()
+    @initAccessPanels()
     
   initSecurityTerminals: ->
-    alert 'initSecurityTerminals'
 #     ||S|| ||S|| ||S||  
 #    R##################
 #   -###################-
@@ -83,6 +83,40 @@ class GameState
               when "3"
                 @addSecurityTerminal j, i, {x:19, y:10}
 
+  initAccessPanels: ->
+    for i in [0..@layout.length-1]
+      for j in [0..@layout[i].length-1]
+        switch @layout[i][j]
+          when "P"
+            switch @layout[i-1][j] 
+              when "1"
+                @addAccessPanel j, i, {x:3, y:-1}
+              when "2"
+                @addAccessPanel j, i, {x:9, y:-1}
+              when "3"
+                @addAccessPanel j, i, {x:15, y:-1}
+            switch @layout[i+1][j] 
+              when "1"
+                @addAccessPanel j, i, {x:3, y:13}
+              when "2"
+                @addAccessPanel j, i, {x:9, y:13}
+              when "3"
+                @addAccessPanel j, i, {x:15, y:13}
+            switch @layout[i][j-1] 
+              when "1"
+                @addAccessPanel j, i, {x:-1, y:2}
+              when "2"
+                @addAccessPanel j, i, {x:-1, y:6}
+              when "3"
+                @addAccessPanel j, i, {x:-1, y:10}
+            switch @layout[i][j+1] 
+              when "1"
+                @addAccessPanel j, i, {x:19, y:2}
+              when "2"
+                @addAccessPanel j, i, {x:19, y:6}
+              when "3"
+                @addAccessPanel j, i, {x:19, y:10}
+
   addSecurityTerminal: (layoutX, layoutY, mapOffset) ->
     mapX = layoutX*ROOM_SIZE.width
     mapY = layoutY*ROOM_SIZE.height
@@ -91,6 +125,15 @@ class GameState
     terminal = new Terminal termX, termY, {x:layoutX, y:layoutY}
     @objects.push terminal
     window.game.scheduler.add terminal, true
+
+  addAccessPanel: (layoutX, layoutY, mapOffset) ->
+    mapX = layoutX*ROOM_SIZE.width
+    mapY = layoutY*ROOM_SIZE.height
+    termX = mapX + mapOffset.x
+    termY = mapY + mapOffset.y
+    accessPanel = new AccessPanel termX, termY, {x:layoutX, y:layoutY}
+    @objects.push accessPanel
+    window.game.scheduler.add accessPanel, true
 
   getObjectsAt: (x,y) ->
     (object for object in @objects when object.x is x and object.y is y)
