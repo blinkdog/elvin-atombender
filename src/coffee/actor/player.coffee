@@ -3,7 +3,7 @@
 #----------------------------------------------------------------------
 
 {ROT} = require '../rot.min'
-{VK_DOWN, VK_LEFT, VK_M, VK_RIGHT, VK_SPACE, VK_UP} = ROT
+{VK_DOWN, VK_LEFT, VK_M, VK_P, VK_RIGHT, VK_SPACE, VK_UP} = ROT
 {PocketComputer} = require './computer'
 {ROOM_SIZE} = require '../map'
 
@@ -35,6 +35,8 @@ class Player
         @use()
       when VK_M
         @openPocketComputer()
+      when VK_P
+        @revealPits()
         
     window.removeEventListener 'keydown', this
     window.game.engine.unlock()
@@ -79,6 +81,13 @@ class Player
   openPocketComputer: ->
     window.game.state.pocketComputer = true
     window.game.scheduler.add new PocketComputer(), true
+
+  revealPits: ->
+    revealed = window.game.state.revealPits()
+    if revealed
+      window.game.sfx.playSound 'pc-positive'
+    else
+      window.game.sfx.playSound 'pc-negative'
 
 exports.Player = Player
 

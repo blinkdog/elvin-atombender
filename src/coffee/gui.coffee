@@ -94,7 +94,7 @@ class GUI
               @display.draw j, i, map[mapY][mapX], '#888', bg
               objHere = state.getObjectsAt mapX, mapY
               for obj in objHere
-                if obj.visible
+                if obj.visible or (obj.ch is '▒')  # DEBUG: Test pit sensor!
                   @display.draw j, i, obj.ch, obj.fg, bg
     # render the player into the display
     layoutX = Math.floor (player.x / Map.ROOM_SIZE.width)
@@ -117,7 +117,7 @@ class GUI
     # make room to display some status stuff at the bottom
     @fillRect 0, dispH, dispW, dispH, ' ', '#fff', '#000'
     # render the name of the pocket computer at the bottom
-    pocketComputer = "%c{yellow}[%c{cyan}M%c{yellow}]%c{cyan}1A9366b"
+    pocketComputer = "%c{yellow}[%c{cyan}M%c{yellow}]%c{cyan}1A9366b  %c{yellow}[%c{cyan}P%c{yellow}]%c{cyan}it Sensor"
     @display.drawText 0, dispH, pocketComputer
     # render the time remaining at the bottom
     if state.finished?

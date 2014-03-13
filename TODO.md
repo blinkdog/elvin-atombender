@@ -5,13 +5,10 @@
 ** Search all files for "console"
 
 # Development TO DO
-* [X] Create PitTrap object
-* [X] Modify GameState to add PitTrap object to game
-* [X] Modify Player movement routines to check for pit traps and remove time
-* Modify Player use routine to allow SecurityTerminal objects to temporarily lock the pit traps in a room
-* Modify handleEvent in Player to allow pocket computer to hack pit trap locking passwords in exchange for time
-* Modify handleEvent in Player to allow pocket computer to highlight pit traps on some key (VK_P??)
-* Modify SecurityTerminal to lock and eventually unlock the pit traps
+* [X] Modify handleEvent in Player to allow pocket computer to highlight pit traps on some key (VK_P)
+* [ ] Modify Player use routine to allow SecurityTerminal objects to temporarily lock the pit traps in a room
+* [ ] Modify SecurityTerminal to lock and eventually unlock the pit traps
+* [ ] Modify handleEvent in Player to allow pocket computer to hack pit trap locking passwords in exchange for time
 * Create Furniture object
 * Modify GameState to add Furniture objects to game
 * Modify Player use routine to allow searching of furniture, reward of puzzle pieces

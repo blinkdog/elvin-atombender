@@ -8,8 +8,10 @@ SOUNDS = [
   "elvin-no",
   "falling",
   "mission-accomplished",
+  "pc-negative",
   "pc-off",
-  "pc-on"
+  "pc-on",
+  "pc-positive"
 ]
 
 class SoundBoard

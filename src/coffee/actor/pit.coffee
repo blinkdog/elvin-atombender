@@ -7,7 +7,7 @@ class PitTrap
     @ch = '▒'
     @fg = '#000'
     @desc = 'Pit Trap'
-    @visible = true       # DEBUG: Just for now, false later
+    @visible = false
     
   getSpeed: -> -1
   

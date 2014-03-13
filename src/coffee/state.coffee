@@ -10,7 +10,8 @@ MILLI_PER_SEC = 1000
 
 TIME_LIMIT = 11 * SEC_PER_MIN * MILLI_PER_SEC
 
-DEATH_PENALTY = 10 * SEC_PER_MIN * MILLI_PER_SEC
+TIME_PENALTY_FALL = 10 * SEC_PER_MIN * MILLI_PER_SEC
+TIME_PENALTY_REVEAL = 10 * MILLI_PER_SEC
 
 MIN_PITS = 1
 MAX_PITS = 6
@@ -71,7 +72,7 @@ class GameState
     window.game.gui.render this
 
   fall: (pit) ->
-    @timeLimit -= DEATH_PENALTY
+    @timeLimit -= TIME_PENALTY_FALL
     window.game.scheduler.add pit
     window.game.gui.render this
 
@@ -80,6 +81,20 @@ class GameState
     window.game.state.player.y = window.game.state.player.safeY
     window.game.engine.unlock()
     window.game.gui.render this
+
+  revealPits: ->
+    @timeLimit -= TIME_PENALTY_REVEAL
+    foundPit = false
+    for i in [@player.y-2..@player.y+2]
+      for j in [@player.x-2..@player.x+2]
+        objHere = @getObjectsAt j, i
+        for obj in objHere
+          switch obj.ch
+            when "▒"
+              if not obj.visible
+                obj.visible = true
+                foundPit = true
+    return foundPit
 
   initObjects: ->
     @objects = []
