@@ -6,6 +6,7 @@ SOUNDS = [
   "another-visitor",
   "elvin-laugh",
   "elvin-no",
+  "falling",
   "mission-accomplished",
   "pc-off",
   "pc-on"

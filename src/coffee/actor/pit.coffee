@@ -1,23 +1,23 @@
-# atombender.coffee
+# pit.coffee
 # Copyright 2014 Patrick Meade. All rights reserved.
 #----------------------------------------------------------------------
 
-class Elvin
+class PitTrap
   constructor: (@x, @y, @layoutRoom)->
-    @ch = '@'
-    @fg = '#bd7570'
-    @bg = '#000'
-    @desc = 'Elvin Atombender'
-    @visible = true
+    @ch = '▒'
+    @fg = '#000'
+    @desc = 'Pit Trap'
+    @visible = true       # DEBUG: Just for now, false later
     
   getSpeed: -> -1
   
   act: ->
+    @visible = true
     window.game.engine.lock()
-    window.game.sfx.playSound 'elvin-no'
-    setTimeout window.game.state.endGameWin, 5000
+    window.game.sfx.playSound 'falling'
+    setTimeout window.game.state.unfall, 3500
 
-exports.Elvin = Elvin
+exports.PitTrap = PitTrap
 
 #----------------------------------------------------------------------
-# end of atombender.coffee
+# end of pit.coffee

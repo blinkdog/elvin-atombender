@@ -4,6 +4,7 @@
 
 class MissionAccomplished
   constructor: ->
+    @visible = false
 
   getSpeed: -> -1
 

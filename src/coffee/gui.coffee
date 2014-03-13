@@ -94,7 +94,8 @@ class GUI
               @display.draw j, i, map[mapY][mapX], '#888', bg
               objHere = state.getObjectsAt mapX, mapY
               for obj in objHere
-                @display.draw j, i, obj.ch, obj.fg, bg
+                if obj.visible
+                  @display.draw j, i, obj.ch, obj.fg, bg
     # render the player into the display
     layoutX = Math.floor (player.x / Map.ROOM_SIZE.width)
     layoutY = Math.floor (player.y / Map.ROOM_SIZE.height)
@@ -218,10 +219,12 @@ deepCloneLayout = (layout) ->
   return newLayout
 
 formatTime = (timeLeft) ->
+  timeRemain = 0
+  timeRemain = timeLeft if timeLeft >= 0
   MINS = 60
   HOURS = 60 * MINS
-  hours = Math.floor timeLeft / HOURS
-  minLeft = timeLeft % HOURS
+  hours = Math.floor timeRemain / HOURS
+  minLeft = timeRemain % HOURS
   minutes = Math.floor minLeft / MINS
   secLeft = minLeft % MINS
   seconds = Math.floor secLeft

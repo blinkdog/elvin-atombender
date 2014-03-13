@@ -5,9 +5,10 @@
 class Terminal
   constructor: (@x, @y, @layoutRoom)->
     @ch = 'S'
-    @fg = '#8a8a8a'
+    @fg = '#675200'
     @bg = '#000'
     @desc = 'Security Terminal'
+    @visible = true
     
   getSpeed: -> 100
   

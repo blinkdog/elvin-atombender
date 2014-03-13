@@ -8,11 +8,12 @@ class AccessPanel
     @fg = '#483aaa'
     @bg = '#000'
     @desc = 'Access Panel'
+    @visible = true
     
   getSpeed: -> 100
   
   act: ->
-
+  
 exports.AccessPanel = AccessPanel
 
 #----------------------------------------------------------------------

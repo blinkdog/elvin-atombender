@@ -7,6 +7,7 @@
 
 class PocketComputer
   constructor: ->
+    @visible = false
     
   getSpeed: -> -1
   

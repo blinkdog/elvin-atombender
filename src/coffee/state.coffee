@@ -8,7 +8,12 @@ MILLI_PER_SEC = 1000
 # DEBUG: Shorter time limit for testing purposes
 #TIME_LIMIT = 6 * MIN_PER_HOUR * SEC_PER_MIN * MILLI_PER_SEC
 
-TIME_LIMIT = 1 * SEC_PER_MIN * MILLI_PER_SEC
+TIME_LIMIT = 11 * SEC_PER_MIN * MILLI_PER_SEC
+
+DEATH_PENALTY = 10 * SEC_PER_MIN * MILLI_PER_SEC
+
+MIN_PITS = 1
+MAX_PITS = 6
 
 Layout = require './layout'
 Map = require './map'
@@ -17,8 +22,11 @@ Map = require './map'
 {Elvin} = require './actor/atombender'
 {MissionAccomplished} = require './actor/endWin'
 {MissionFailed} = require './actor/endLose'
+{PitTrap} = require './actor/pit'
 {Player} = require './actor/player'
 {Terminal} = require './actor/terminal'
+
+{ROT} = require './rot.min'
 
 class GameState
   constructor: (@layout, @map) ->
@@ -62,10 +70,22 @@ class GameState
     # display everything to the user
     window.game.gui.render this
 
+  fall: (pit) ->
+    @timeLimit -= DEATH_PENALTY
+    window.game.scheduler.add pit
+    window.game.gui.render this
+
+  unfall: =>
+    window.game.state.player.x = window.game.state.player.safeX
+    window.game.state.player.y = window.game.state.player.safeY
+    window.game.engine.unlock()
+    window.game.gui.render this
+
   initObjects: ->
     @objects = []
     @initSecurityTerminals()
     @initAccessPanels()
+    @initPitTraps()
     
   initSecurityTerminals: ->
 #     ||S|| ||S|| ||S||  
@@ -157,6 +177,22 @@ class GameState
           when "P"
             @addElvin j, i, {x:9, y:6}
 
+  initPitTraps: ->
+    for i in [0..@layout.length-1]
+      for j in [0..@layout[i].length-1]
+        switch @layout[i][j]
+          when "R"
+            numPitTraps = Math.floor(ROT.RNG.getUniform() * ((MAX_PITS-MIN_PITS)+1)) + MIN_PITS
+            while numPitTraps > 0
+              pitRoomOffsetX = Math.floor(ROT.RNG.getUniform() * ROOM_SIZE.width)
+              pitRoomOffsetY = Math.floor(ROT.RNG.getUniform() * ROOM_SIZE.height)
+              pitMapX = j*ROOM_SIZE.width + pitRoomOffsetX
+              pitMapY = i*ROOM_SIZE.height + pitRoomOffsetY
+              alreadyHere = @getObjectsAt pitMapX, pitMapY
+              if alreadyHere.length is 0
+                @addPitTrap j, i, {x:pitRoomOffsetX, y:pitRoomOffsetY}
+                numPitTraps--
+
   addSecurityTerminal: (layoutX, layoutY, mapOffset) ->
     mapX = layoutX*ROOM_SIZE.width
     mapY = layoutY*ROOM_SIZE.height
@@ -183,6 +219,14 @@ class GameState
     elvinAtom = new Elvin termX, termY, {x:layoutX, y:layoutY}
     @objects.push elvinAtom
     window.game.scheduler.add elvinAtom, true
+
+  addPitTrap: (layoutX, layoutY, mapOffset) ->
+    mapX = layoutX*ROOM_SIZE.width
+    mapY = layoutY*ROOM_SIZE.height
+    termX = mapX + mapOffset.x
+    termY = mapY + mapOffset.y
+    pitTrap = new PitTrap termX, termY, {x:layoutX, y:layoutY}
+    @objects.push pitTrap
 
   getObjectsAt: (x,y) ->
     (object for object in @objects when object.x is x and object.y is y)

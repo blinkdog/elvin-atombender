@@ -4,6 +4,7 @@
 
 class MissionFailed
   constructor: ->
+    @visible = false
 
   getSpeed: -> -1
 

@@ -4,6 +4,7 @@
 
 class BeginGame
   constructor: ->
+    @visible = false
 
   getSpeed: -> -1
 
