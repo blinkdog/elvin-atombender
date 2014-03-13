@@ -2,6 +2,7 @@
 # Copyright 2014 Patrick Meade. All rights reserved.
 #----------------------------------------------------------------------
 
+Map = require './map'
 {ROT} = require './rot.min'
 
 DISPLAY_SIZE = { width:60, height:40 }
@@ -67,15 +68,24 @@ class GUI
       for j in [0..dispW]
         mapX = ((player.x - centerX) + j)
         mapY = ((player.y - centerY) + i)
+        layoutX = Math.floor (mapX / Map.ROOM_SIZE.width)
+        layoutY = Math.floor (mapY / Map.ROOM_SIZE.height)
         if (mapX >= 0) and (mapX < map[0].length)
           if (mapY >= 0) and (mapY < map.length)
             if (visibleMap[mapY][mapX] is VISIBLE)
-              @display.draw j, i, map[mapY][mapX], '#888', '#000'
+              if map[mapY][mapX] is ' ' 
+                bg = state.layoutColor[layoutY][layoutX]
+              else
+                bg = '#000'
+              @display.draw j, i, map[mapY][mapX], '#888', bg
               objHere = state.getObjectsAt mapX, mapY
               for obj in objHere
-                @display.draw j, i, obj.ch, obj.fg, obj.bg
+                @display.draw j, i, obj.ch, obj.fg, bg
     # render the player into the display
-    @display.draw centerX, centerY, '@', '#fff', '#000'
+    layoutX = Math.floor (player.x / Map.ROOM_SIZE.width)
+    layoutY = Math.floor (player.y / Map.ROOM_SIZE.height)
+    bg = state.layoutColor[layoutY][layoutX]
+    @display.draw centerX, centerY, '@', '#fff', bg
     # render the timer bar at the bottom
     @renderTime state
 

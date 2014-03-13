@@ -10,6 +10,7 @@ MILLI_PER_SEC = 1000
 
 TIME_LIMIT = 1 * SEC_PER_MIN * MILLI_PER_SEC
 
+Layout = require './layout'
 Map = require './map'
 {ROOM_SIZE} = require './map'
 {AccessPanel} = require './actor/access'
@@ -23,6 +24,7 @@ class GameState
   constructor: (@layout, @map) ->
     @player = new Player()
     @started = false
+    @layoutColor = Layout.paint @layout
     @initObjects()
 
   getTimeLeft: ->
@@ -186,7 +188,7 @@ class GameState
 
   getObjectsAt: (x,y) ->
     (object for object in @objects when object.x is x and object.y is y)
-
+    
 exports.GameState = GameState
 
 #----------------------------------------------------------------------

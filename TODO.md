@@ -5,10 +5,7 @@
 ** Search all files for "console"
 
 # Development TO DO
-* [X] Modify GameState to add a lose-by-clock method
-** [X] Testing of losing
-* Add colors to rooms and corridors
-** Research: Actual colors from IM rooms?
+* [X] Add colors to rooms and corridors
 * Modify handleEvent in Player to add a 'Pocket Computer' command
   triggered by VK_M
 * Modify GUI to display the Pocket Computer auto map

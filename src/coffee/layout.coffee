@@ -2,6 +2,12 @@
 # Copyright 2014 Patrick Meade. All rights reserved.
 #----------------------------------------------------------------------
 
+BG_COLORS = [
+  "#72b14b",     # green
+  "#d5df7c",     # yellow
+  "#84c5cc"      # cyan
+]
+
 exports.FORTRESS_SIZE = FORTRESS_SIZE = { width:9, height:6 }
 exports.TUNNEL_TYPE = ['1', '2', '3']
 
@@ -91,9 +97,21 @@ exports.generateFortress = ->
   layout = exports.addRoom layout, expandible.src, expandible.dir, exports.TUNNEL_TYPE.random(), 'P'
   return layout
 
+exports.paint = (layout) ->
+  layoutColor = cloneLayout layout
+  for i in [0..layoutColor.length-1]
+    for j in [0..layoutColor[i].length-1]
+      layoutColor[i][j] = BG_COLORS.random()
+
 # -----------------------------------------------------------
 
-cloneLayout = (layout) -> layout.slice 0
+cloneLayout = (layout) ->
+  newLayout = []
+  for i in [0..layout.length-1]
+    newLayout[i] = []
+    for j in [0..layout[i].length-1]
+      newLayout[i][j] = layout[i][j]
+  return newLayout
 
 #----------------------------------------------------------------------
 # end of layout.coffee

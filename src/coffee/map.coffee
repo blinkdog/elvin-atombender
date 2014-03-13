@@ -33,7 +33,13 @@ exports.revealSecureRoom = (map, layout) ->
 
 #------------------------------------------------------------
 
-cloneMap = (map) -> map.slice 0
+cloneMap = (map) ->
+  newMap = []
+  for i in [0..map.length-1]
+    newMap[i] = []
+    for j in [0..map[i].length-1]
+      newMap[i][j] = map[i][j]
+  return newMap
 
 addBlock = (map, mapX, mapY, blockType, rowParity) ->
   oddRow = false if rowParity is 0
