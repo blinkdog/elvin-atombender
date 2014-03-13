@@ -3,7 +3,7 @@
 #----------------------------------------------------------------------
 
 {ROT} = require '../rot.min'
-{VK_DOWN, VK_LEFT, VK_RIGHT, VK_UP} = ROT
+{VK_DOWN, VK_LEFT, VK_RIGHT, VK_SPACE, VK_UP} = ROT
 
 class Player
   constructor: ->
@@ -26,6 +26,9 @@ class Player
         @move {x:-1, y:0}
       when VK_RIGHT
         @move {x:1, y:0}
+      when VK_SPACE
+        @use()
+        
     window.removeEventListener 'keydown', this
     window.game.engine.unlock()
     window.game.gui.render window.game.state
@@ -36,6 +39,18 @@ class Player
     if window.game.map[newY][newX] is ' '
       @x = newX
       @y = newY
+
+  use: ->
+    objHere = window.game.state.getObjectsAt @x, @y
+    if objHere.length is 0
+      alert 'Nothing Here'
+      return
+    for obj in objHere
+      switch obj.ch
+        when "M"
+          window.game.state.unlockDoor()
+        else
+          alert 'Unknown Object: ' + obj.ch
 
 exports.Player = Player
 

@@ -2,7 +2,7 @@
 # Copyright 2014 Patrick Meade. All rights reserved.
 #----------------------------------------------------------------------
 
-SOUNDS = ["another-visitor"]
+SOUNDS = ["another-visitor", "elvin-no", "mission-accomplished"]
 
 class SoundBoard
   constructor: ->

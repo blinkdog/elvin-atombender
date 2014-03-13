@@ -34,6 +34,7 @@ class ImpossibleMission
     @engine.start()
 
   tick: =>
+    return if @state.finished?
     if @state.getTimeLeft() > 0
       setTimeout @tick, 1000
     @gui.renderTime @state

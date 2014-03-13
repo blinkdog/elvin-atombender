@@ -23,6 +23,14 @@ exports.generateFortress = (layout) ->
   newMap = exports.addLayout newMap, layout
   return newMap
 
+exports.revealSecureRoom = (map, layout) ->
+  newMap = cloneMap map
+  for i in [0..layout.length-1]
+    for j in [0..layout[i].length-1]
+      if layout[i][j] is 'P'
+        addBlock newMap, j*ROOM_SIZE.width, i*ROOM_SIZE.height, 'M', i%2
+  return newMap
+
 #------------------------------------------------------------
 
 cloneMap = (map) -> map.slice 0
@@ -38,7 +46,7 @@ addBlock = (map, mapX, mapY, blockType, rowParity) ->
     when 'P'
       for i in [0..ROOM_SIZE.height-1]
         for j in [0..ROOM_SIZE.width-1]
-          map[mapY+i][mapX+j] = 'P'
+          map[mapY+i][mapX+j] = 'X'
     when '1'
       if oddRow
         # horizontal tunnel
@@ -72,6 +80,10 @@ addBlock = (map, mapX, mapY, blockType, rowParity) ->
         for i in [0..ROOM_SIZE.height-1]
           for j in [13..17]
             map[mapY+i][mapX+j] = ' '
+    when 'M'
+      for i in [0..ROOM_SIZE.height-1]
+        for j in [0..ROOM_SIZE.width-1]
+          map[mapY+i][mapX+j] = ' '
 
 #----------------------------------------------------------------------
 # end of map.coffee

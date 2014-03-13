@@ -1,15 +1,14 @@
 ## Release TO DO
 * Remove errant debugging calls hanging around
 ** Search all files for "alert"
+** Search all files for "DEBUG"
 ** Search all files for "console"
 
 # Development TO DO
-* [X] Create AccessPanel object
-* [X] Modify GameState to add AccessPanel object to game
-* Modify handleEvent in Player to add a 'use' command triggered by VK_SPACE
-* Modify GameState to add a win-by-unlock method
-** Testing of winning
-*** Room with computers, Red '@', "No.. no.. no!"
+* [X] Modify handleEvent in Player to add a 'use' command triggered by VK_SPACE
+* [X] Modify GameState to add a win-by-unlock method
+** [X] Testing of winning
+*** [X] Room with computers, Red '@', "No.. no.. no!"
 * Modify GameState to add a lose-by-clock method
 ** Testing of losing
 * Add colors to rooms and corridors
