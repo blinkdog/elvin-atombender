@@ -5,10 +5,8 @@
 ** Search all files for "console"
 
 # Development TO DO
-* [X] Add colors to rooms and corridors
-* Modify handleEvent in Player to add a 'Pocket Computer' command
-  triggered by VK_M
-* Modify GUI to display the Pocket Computer auto map
+* [X] Modify handleEvent in Player to add a 'Pocket Computer' command triggered by VK_M
+* [X] Modify GUI to display the Pocket Computer auto map
 * Create PitTrap object
 * Modify GameState to add PitTrap object to game
 * Modify Player movement routines to check for pit traps and remove time

@@ -23,6 +23,7 @@ Map = require './map'
 class GameState
   constructor: (@layout, @map) ->
     @player = new Player()
+    @pocketComputer = false
     @started = false
     @layoutColor = Layout.paint @layout
     @initObjects()
@@ -37,9 +38,6 @@ class GameState
     @timeLimit = Date.now() + TIME_LIMIT
     setTimeout window.game.tick, 1
     window.game.engine.unlock()
-    # DEBUG: display the fortress layout
-    result = (@layout[row].join '' for row in [0..@layout.length-1])
-    alert '\n'+result.join '\n'
 
   endGameWin: =>
     window.game.scheduler.clear()

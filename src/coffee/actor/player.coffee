@@ -3,7 +3,8 @@
 #----------------------------------------------------------------------
 
 {ROT} = require '../rot.min'
-{VK_DOWN, VK_LEFT, VK_RIGHT, VK_SPACE, VK_UP} = ROT
+{VK_DOWN, VK_LEFT, VK_M, VK_RIGHT, VK_SPACE, VK_UP} = ROT
+{PocketComputer} = require './computer'
 
 class Player
   constructor: ->
@@ -28,6 +29,8 @@ class Player
         @move {x:1, y:0}
       when VK_SPACE
         @use()
+      when VK_M
+        @openPocketComputer()
         
     window.removeEventListener 'keydown', this
     window.game.engine.unlock()
@@ -51,6 +54,10 @@ class Player
           window.game.state.unlockDoor()
         else
           alert 'Unknown Object: ' + obj.ch
+
+  openPocketComputer: ->
+    window.game.state.pocketComputer = true
+    window.game.scheduler.add new PocketComputer(), true
 
 exports.Player = Player
 

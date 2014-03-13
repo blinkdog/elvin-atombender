@@ -10,6 +10,15 @@ DISPLAY_SIZE = { width:60, height:40 }
 NOT_VISIBLE = 'X'
 VISIBLE = '!'
 
+BOX =
+  single:
+    h: '─'
+    ll: '└'
+    lr: '┘'
+    ul: '┌'
+    ur: '┐'
+    v: '│'
+
 class GUI
   constructor: ->
   
@@ -41,6 +50,9 @@ class GUI
     document.body.firstChild.style.marginTop = "" + spacerHeight + "px"    
     
   render: (state) ->
+    # HACK: stateful visibility in the GUI? yuck!
+    if not @visibleLayout?
+      @visibleLayout = deepCloneLayout state.layout
     # define some time savers
     centerX = Math.floor DISPLAY_SIZE.width / 2
     centerY = Math.floor DISPLAY_SIZE.height / 2
@@ -62,6 +74,7 @@ class GUI
     mapFov = new ROT.FOV.PreciseShadowcasting lightPasses
     mapFov.compute player.x, player.y, maxVisibilityDistance, updateVisibleMap
     # fill the grid with magic pink hashes
+      # DEBUG: Just to give a sense of the full display; remove later
     @fillRect 0, 0, dispW, dispH, '#', '#f0f', '#000'
     # render the defined map into the display
     for i in [0..dispH]
@@ -73,6 +86,7 @@ class GUI
         if (mapX >= 0) and (mapX < map[0].length)
           if (mapY >= 0) and (mapY < map.length)
             if (visibleMap[mapY][mapX] is VISIBLE)
+              @visibleLayout[layoutY][layoutX] = VISIBLE
               if map[mapY][mapX] is ' ' 
                 bg = state.layoutColor[layoutY][layoutX]
               else
@@ -88,7 +102,10 @@ class GUI
     @display.draw centerX, centerY, '@', '#fff', bg
     # render the timer bar at the bottom
     @renderTime state
-
+    # render the pocket computer, if it's open
+    if state.pocketComputer
+      @renderPocketComputer state
+    
   renderTime: (state) ->
     # define some time savers
     centerX = Math.floor DISPLAY_SIZE.width / 2
@@ -109,10 +126,76 @@ class GUI
       timeLeft = "%c{cyan}" + timeDisp[0] + "%c{yellow}:%c{cyan}" + timeDisp[1] + "%c{yellow}:%c{cyan}" + timeDisp[2]
     @display.drawText dispW-7, dispH, timeLeft
 
+  renderPocketComputer: (state) ->
+    # define some time savers
+    centerX = Math.floor DISPLAY_SIZE.width / 2
+    centerY = Math.floor DISPLAY_SIZE.height / 2
+    dispW = DISPLAY_SIZE.width-1
+    dispH = DISPLAY_SIZE.height-1
+    {layout, map, player} = state
+    # figure out where the pocket computer will display
+    pcX1 = 0
+    pcY1 = (dispH - centerY) >> 1
+    pcX2 = dispW
+    pcY2 = pcY1 + centerY
+    # figure out where the minimap will display
+    miniX1 = pcX1+((pcX2-pcX1) - layout[0].length) >> 1
+    miniY1 = pcY1+3
+    miniX2 = miniX1 + layout[0].length + 1
+    miniY2 = miniY1 + layout.length + 1
+    # clear the area for the mini-computer to display
+    @fillRect pcX1, pcY1, pcX2, pcY2, ' ', '#fff', '#000'
+    @drawBox pcX1, pcY1, pcX2, pcY2, BOX.single, '#84c5cc', '#000'
+    @drawBox miniX1, miniY1, miniX2, miniY2, BOX.single, '#d5df7c', '#000'
+    # determine where the player is at
+    playerLayoutX = Math.floor (player.x / Map.ROOM_SIZE.width)
+    playerLayoutY = Math.floor (player.y / Map.ROOM_SIZE.height)
+    # roll over the layout, displaying on the mini-map
+    for i in [0..layout.length-1]
+      for j in [0..layout[i].length-1]
+        oddRow = false if i%2 is 0
+        oddRow = true if i%2 is 1
+        fg = '#000'
+        bg = '#72b14b'
+        switch layout[i][j]
+          when 'E'
+            ch = '█'
+          when 'R'
+            ch = '█'
+          when 'P'
+            ch = '█'
+            fg = '#800'
+          when '1', '2', '3'
+            if oddRow
+              ch = '─'
+            else
+              ch = '|'
+          else
+            ch = ' '
+        # if this is where the player currently is, use white
+        if (j is playerLayoutX) and (i is playerLayoutY)
+          fg = '#fff'
+        # if we've seen it, display it
+          # DEBUG: Make sure the whole map is vvvvvvvvvvvvv visible
+        if (@visibleLayout[i][j] is VISIBLE) or (1 is 1)
+          @display.draw miniX1+j+1, miniY1+i+1, ch, fg, bg
+
   fillRect: (x1, y1, x2, y2, ch, fg, bg) ->
     for y in [y1..y2]
       for x in [x1..x2]
         @display.draw x, y, ch, fg, bg
+
+  drawBox: (x1, y1, x2, y2, boxSet, fg, bg) ->
+    for y in [y1..y2]
+      @display.draw x1, y, boxSet.v, fg, bg
+      @display.draw x2, y, boxSet.v, fg, bg
+    for x in [x1..x2]
+      @display.draw x, y1, boxSet.h, fg, bg
+      @display.draw x, y2, boxSet.h, fg, bg
+    @display.draw x1, y1, boxSet.ul, fg, bg
+    @display.draw x2, y1, boxSet.ur, fg, bg
+    @display.draw x1, y2, boxSet.ll, fg, bg
+    @display.draw x2, y2, boxSet.lr, fg, bg
 
 exports.GUI = GUI
 
@@ -125,6 +208,14 @@ deepCloneMap = (map) ->
     for j in [0..map[i].length-1]
       newMap[i][j] = map[i][j]
   return newMap
+
+deepCloneLayout = (layout) ->
+  newLayout = []
+  for i in [0..layout.length-1]
+    newLayout[i] = []
+    for j in [0..layout[i].length-1]
+      newLayout[i][j] = layout[i][j]
+  return newLayout
 
 formatTime = (timeLeft) ->
   MINS = 60

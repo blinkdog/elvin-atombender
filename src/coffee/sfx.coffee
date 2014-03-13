@@ -6,7 +6,9 @@ SOUNDS = [
   "another-visitor",
   "elvin-laugh",
   "elvin-no",
-  "mission-accomplished"
+  "mission-accomplished",
+  "pc-off",
+  "pc-on"
 ]
 
 class SoundBoard
