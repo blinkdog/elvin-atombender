@@ -5,8 +5,11 @@
 CHANCE_PASSWORD = 0.1
 CHANCE_PUZZLE = 0.3
 
-MIN_PITS = 1
+MIN_PITS = 0
 MAX_PITS = 6
+
+MIN_ROBOTS = 1
+MAX_ROBOTS = 6
 
 MIN_PER_HOUR = 60
 SEC_PER_MIN = 60
@@ -29,6 +32,7 @@ Map = require './map'
 {MissionFailed} = require './actor/endLose'
 {PitTrap} = require './actor/pit'
 {Player} = require './actor/player'
+{Robot} = require './actor/robot'
 {Terminal} = require './actor/terminal'
 
 {ROT} = require './rot.min'
@@ -114,7 +118,7 @@ class GameState
       when "NOTHING"
         @lastReward = "Nothing Here"
       else
-        @lastReward = "Puzzle: " + reward
+        @lastReward = "Secure Room Password Fragment"
         @player.puzzle.push reward
     window.game.gui.render this
 
@@ -124,6 +128,7 @@ class GameState
     @initAccessPanels()
     @initPitTraps()
     @initFurniture()
+    @initRobots()
 
   initPuzzles: ->
     @puzzles = []
@@ -272,6 +277,22 @@ class GameState
         puzzleList = puzzleList.filter (value, index, array) ->
           return value isnt reward
 
+  initRobots: ->
+    for i in [0..@layout.length-1]
+      for j in [0..@layout[i].length-1]
+        switch @layout[i][j]
+          when "R"
+            numRobots = Math.floor(ROT.RNG.getUniform() * ((MAX_ROBOTS-MIN_ROBOTS)+1)) + MIN_ROBOTS
+            while numRobots > 0
+              robotRoomOffsetX = Math.floor(ROT.RNG.getUniform() * ROOM_SIZE.width)
+              robotRoomOffsetY = Math.floor(ROT.RNG.getUniform() * ROOM_SIZE.height)
+              robotMapX = j*ROOM_SIZE.width + robotRoomOffsetX
+              robotMapY = i*ROOM_SIZE.height + robotRoomOffsetY
+              alreadyHere = @getObjectsAt robotMapX, robotMapY
+              if alreadyHere.length is 0
+                @addRobot j, i, {x:robotRoomOffsetX, y:robotRoomOffsetY}
+                numRobots--
+
   addSecurityTerminal: (layoutX, layoutY, mapOffset) ->
     mapX = layoutX*ROOM_SIZE.width
     mapY = layoutY*ROOM_SIZE.height
@@ -314,6 +335,15 @@ class GameState
     termY = mapY + mapOffset.y
     furniture = new Furniture termX, termY, {x:layoutX, y:layoutY}, reward
     @objects.push furniture
+
+  addRobot: (layoutX, layoutY, mapOffset) ->
+    mapX = layoutX*ROOM_SIZE.width
+    mapY = layoutY*ROOM_SIZE.height
+    robotX = mapX + mapOffset.x
+    robotY = mapY + mapOffset.y
+    robot = new Robot robotX, robotY, {x:layoutX, y:layoutY}
+    @objects.push robot
+    window.game.scheduler.add robot, true
 
   getObjectsAt: (x,y) ->
     (object for object in @objects when object.x is x and object.y is y)
