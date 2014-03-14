@@ -18,6 +18,68 @@ BOX =
     ul: '┌'
     ur: '┐'
     v: '│'
+    pd: '╷'
+    pl: '╴'
+    pr: '╶'
+    pu: '╵'
+    td: '┴'
+    tl: '├'
+    tr: '┤'
+    tu: '┬'
+
+PUZZLES = [
+  "┌┐││└┘", # 0
+  "┌┐┌┘└┘", # 2
+  "┌┐╶┤└┘", # 3
+  "┌╴└┐╶┘", # 5
+  "┌╴├┐└┘", # 6
+  "┌┐├┤└┘", # 8
+  "┌┐└┤╶┘", # 9
+  "┌┐├┤╵╵", # A
+  "┌╴├╴└╴", # E
+  "┌┐│┐└┘", # G
+  "╷╷├┤╵╵", # H
+  "╶┬╷│└┘", # J
+  "┌┐└┐└┘", # S
+  "╷╷││└┘", # U
+  "╷╷└┤└┘"  # Y
+]
+
+ROTATIONS = [
+  "┌┐┘└",
+  "┬┤┴├",
+  "╷╴╵╶",
+  "│─"
+]
+
+FLIPS =
+  HORIZ: [
+    "┌┐",
+    "┘└",
+    "┬┬",
+    "┤├",
+    "┴┴",
+    "╷╷",
+    "╴╶",
+    "╵╵",
+    "││",
+    "──"
+  ]
+  VERT: [
+    "┌└",
+    "┐┘",
+    "┬┴",
+    "┤┤",
+    "├├",
+    "╷╵",
+    "╴╴",
+    "╶╶",
+    "││",
+    "──"
+  ]
+
+PUZZLE_WIDTH = 2
+PUZZLE_HEIGHT = 3
 
 class GUI
   constructor: ->
@@ -139,7 +201,7 @@ class GUI
     # make room to display the search bar at the top
     @fillRect 0, 0, dispW, 0, ' ', '#fff', '#000'
     # build up the searching string
-    searchMsg = "%c{cyan}Searching%c{yellow}: %c{red}"
+    searchMsg = "%c{cyan}" + state.searchDesc + "%c{yellow}: %c{red}"
     for i in [1..state.lastSearch]
       searchMsg += '━'
     # draw it to the display
@@ -178,8 +240,8 @@ class GUI
     pcX2 = dispW
     pcY2 = pcY1 + centerY
     # figure out where the minimap will display
-    miniX1 = pcX1+((pcX2-pcX1) - layout[0].length) >> 1
-    miniY1 = pcY1+3
+    miniX1 = pcX1+1
+    miniY1 = pcY1+1
     miniX2 = miniX1 + layout[0].length + 1
     miniY2 = miniY1 + layout.length + 1
     # clear the area for the mini-computer to display
@@ -216,8 +278,22 @@ class GUI
           fg = '#fff'
         # if we've seen it, display it
           # DEBUG: Make sure the whole map is vvvvvvvvvvvvv visible
-        if (@visibleLayout[i][j] is VISIBLE) or (1 is 1)
+          #if (@visibleLayout[i][j] is VISIBLE) or (1 is 1)
+        if (@visibleLayout[i][j] is VISIBLE)
           @display.draw miniX1+j+1, miniY1+i+1, ch, fg, bg
+        else
+          @display.draw miniX1+j+1, miniY1+i+1, ' ', fg, bg
+    # display the boxes for the puzzle pieces
+    for i in [0..5]
+      puzX1 = miniX2+i*(PUZZLE_WIDTH+2)+1
+      puzY1 = pcY1+1
+      puzX2 = puzX1+PUZZLE_WIDTH+1
+      puzY2 = puzY1+PUZZLE_HEIGHT+1
+      @drawBox puzX1, puzY1, puzX2, puzY2, BOX.single, '#d5df7c', '#000'
+      @drawPuzzle state, i, puzX1, puzY1
+    # display the pit sensor capability
+    pitSensor = "%c{yellow}[%c{cyan}P%c{yellow}]%c{cyan}it Sensor"
+    @display.drawText miniX2+1, miniY2, pitSensor
 
   fillRect: (x1, y1, x2, y2, ch, fg, bg) ->
     for y in [y1..y2]
@@ -236,7 +312,19 @@ class GUI
     @display.draw x1, y2, boxSet.ll, fg, bg
     @display.draw x2, y2, boxSet.lr, fg, bg
 
+  drawPuzzle: (state, index, px, py) ->
+    {player} = state
+    for i in [0..PUZZLE_HEIGHT-1]
+      for j in [0..PUZZLE_WIDTH-1]
+        puzzleId = index*6 + i*2 + j
+        if player.hasPuzzle puzzleId
+          ch = state.puzzles[index].charAt i*2+j
+          @display.draw px+j+1, py+i+1, ch, '#ffffff', '#606060'
+        else
+          @display.draw px+j+1, py+i+1, ' ', '#fff', '#000'
+
 exports.GUI = GUI
+exports.PUZZLES = PUZZLES
 
 #------------------------------------------------------------
 

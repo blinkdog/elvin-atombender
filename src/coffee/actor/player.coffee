@@ -84,6 +84,7 @@ class Player
       if obj.searchTime?
         obj.searchTime--
         window.game.state.lastSearch = obj.searchTime
+        window.game.state.searchDesc = obj.desc
         if obj.searchTime is 0
           window.game.scheduler.add obj, false
       # otherwise it is a security terminal or something else
@@ -104,6 +105,10 @@ class Player
       window.game.sfx.playSound 'pc-positive'
     else
       window.game.sfx.playSound 'pc-negative'
+
+  hasPuzzle: (index) ->
+    matching = (puzzle for puzzle in @puzzle when puzzle is index)
+    return matching.length > 0
 
 exports.Player = Player
 

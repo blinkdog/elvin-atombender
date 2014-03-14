@@ -12,9 +12,9 @@ MIN_PER_HOUR = 60
 SEC_PER_MIN = 60
 MILLI_PER_SEC = 1000
 # DEBUG: Shorter time limit for testing purposes
-#TIME_LIMIT = 6 * MIN_PER_HOUR * SEC_PER_MIN * MILLI_PER_SEC
+#TIME_LIMIT = 11 * SEC_PER_MIN * MILLI_PER_SEC
 
-TIME_LIMIT = 11 * SEC_PER_MIN * MILLI_PER_SEC
+TIME_LIMIT = 6 * MIN_PER_HOUR * SEC_PER_MIN * MILLI_PER_SEC
 
 TIME_PENALTY_FALL = 10 * SEC_PER_MIN * MILLI_PER_SEC
 TIME_PENALTY_REVEAL = 10 * MILLI_PER_SEC
@@ -32,6 +32,7 @@ Map = require './map'
 {Terminal} = require './actor/terminal'
 
 {ROT} = require './rot.min'
+{PUZZLES} = require './gui'
 
 class GameState
   constructor: (@layout, @map) ->
@@ -41,6 +42,7 @@ class GameState
     @lastSearch = 0
     @layoutColor = Layout.paint @layout
     @initObjects()
+    @initPuzzles()
 
   getTimeLeft: ->
     if @started
@@ -122,7 +124,12 @@ class GameState
     @initAccessPanels()
     @initPitTraps()
     @initFurniture()
-    
+
+  initPuzzles: ->
+    @puzzles = []
+    for i in [1..6]
+      @puzzles.push PUZZLES.random()
+
   initSecurityTerminals: ->
 #     ||S|| ||S|| ||S||  
 #    R##################
