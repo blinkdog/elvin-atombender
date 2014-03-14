@@ -16,11 +16,15 @@ TIME_PENALTY_REVEAL = 10 * MILLI_PER_SEC
 MIN_PITS = 1
 MAX_PITS = 6
 
+MIN_FURNITURE = 1
+MAX_FURNITURE = 10
+
 Layout = require './layout'
 Map = require './map'
 {ROOM_SIZE} = require './map'
 {AccessPanel} = require './actor/access'
 {Elvin} = require './actor/atombender'
+{Furniture} = require './actor/furniture'
 {MissionAccomplished} = require './actor/endWin'
 {MissionFailed} = require './actor/endLose'
 {PitTrap} = require './actor/pit'
@@ -96,11 +100,15 @@ class GameState
                 foundPit = true
     return foundPit
 
+  addReward: (reward) ->
+    alert 'Rewards not supported yet'
+
   initObjects: ->
     @objects = []
     @initSecurityTerminals()
     @initAccessPanels()
     @initPitTraps()
+    @initFurniture()
     
   initSecurityTerminals: ->
 #     ||S|| ||S|| ||S||  
@@ -208,6 +216,22 @@ class GameState
                 @addPitTrap j, i, {x:pitRoomOffsetX, y:pitRoomOffsetY}
                 numPitTraps--
 
+  initFurniture: ->
+    for i in [0..@layout.length-1]
+      for j in [0..@layout[i].length-1]
+        switch @layout[i][j]
+          when "R"
+            numFurniture = Math.floor(ROT.RNG.getUniform() * ((MAX_FURNITURE-MIN_FURNITURE)+1)) + MIN_FURNITURE
+            while numFurniture > 0
+              furnRoomOffsetX = Math.floor(ROT.RNG.getUniform() * ROOM_SIZE.width)
+              furnRoomOffsetY = Math.floor(ROT.RNG.getUniform() * ROOM_SIZE.height)
+              furnMapX = j*ROOM_SIZE.width + furnRoomOffsetX
+              furnMapY = i*ROOM_SIZE.height + furnRoomOffsetY
+              alreadyHere = @getObjectsAt furnMapX, furnMapY
+              if alreadyHere.length is 0
+                @addFurniture j, i, {x:furnRoomOffsetX, y:furnRoomOffsetY}
+                numFurniture--
+
   addSecurityTerminal: (layoutX, layoutY, mapOffset) ->
     mapX = layoutX*ROOM_SIZE.width
     mapY = layoutY*ROOM_SIZE.height
@@ -243,8 +267,19 @@ class GameState
     pitTrap = new PitTrap termX, termY, {x:layoutX, y:layoutY}
     @objects.push pitTrap
 
+  addFurniture: (layoutX, layoutY, mapOffset) ->
+    mapX = layoutX*ROOM_SIZE.width
+    mapY = layoutY*ROOM_SIZE.height
+    termX = mapX + mapOffset.x
+    termY = mapY + mapOffset.y
+    furniture = new Furniture termX, termY, {x:layoutX, y:layoutY}, 'REWARD'
+    @objects.push furniture
+
   getObjectsAt: (x,y) ->
     (object for object in @objects when object.x is x and object.y is y)
+    
+  removeObject: (obj) ->
+    @objects = @objects.remove obj
     
 exports.GameState = GameState
 
