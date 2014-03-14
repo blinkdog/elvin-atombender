@@ -238,7 +238,7 @@ class GameState
 
   initFurniture: ->
     # create a list of all puzzle pieces
-    puzzleList = (i for i in [1..36])
+    puzzleList = (i for i in [0..35])
     # create a list of passwords
     passwordList = ["LIFT", "SNOOZE"]
     # create a list of rooms in the fortress

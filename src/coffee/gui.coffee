@@ -278,8 +278,8 @@ class GUI
           fg = '#fff'
         # if we've seen it, display it
           # DEBUG: Make sure the whole map is vvvvvvvvvvvvv visible
-          #if (@visibleLayout[i][j] is VISIBLE) or (1 is 1)
-        if (@visibleLayout[i][j] is VISIBLE)
+        if (@visibleLayout[i][j] is VISIBLE) or (1 is 1)
+        #if (@visibleLayout[i][j] is VISIBLE)
           @display.draw miniX1+j+1, miniY1+i+1, ch, fg, bg
         else
           @display.draw miniX1+j+1, miniY1+i+1, ' ', fg, bg

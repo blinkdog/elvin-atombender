@@ -7,6 +7,9 @@
 {PocketComputer} = require './computer'
 {ROOM_SIZE} = require '../map'
 
+# DEBUG: REMOVE THIS!
+{VK_X} = ROT
+
 class Player
   constructor: ->
     @x = 20
@@ -44,6 +47,12 @@ class Player
         @openPocketComputer()
       when VK_P
         @revealPits()
+      # DEBUG: REMOVE THIS!!
+      when VK_X
+        @puzzle = []
+        for i in [0..35]
+          @puzzle.push i
+
         
     window.removeEventListener 'keydown', this
     window.game.engine.unlock()
@@ -76,9 +85,8 @@ class Player
   use: ->
     # figure out what we might use here
     objHere = window.game.state.getObjectsAt @x, @y
-    if objHere.length is 0
-      alert 'Nothing Here'
-      return
+    return if objHere.length is 0
+    # for each object in this location
     for obj in objHere
       # if this is a searchable piece of furniture
       if obj.searchTime?
@@ -87,11 +95,14 @@ class Player
         window.game.state.searchDesc = obj.desc
         if obj.searchTime is 0
           window.game.scheduler.add obj, false
-      # otherwise it is a security terminal or something else
+      # otherwise it is a security terminal or something
       else
         switch obj.ch
-          when "M"
-            window.game.state.unlockDoor()
+          when "M"                             # access panel
+            if @puzzle.length is 36
+              window.game.state.unlockDoor()
+            else
+              window.game.sfx.playSound 'elvin-laugh'
           else
             alert 'Unknown Object: ' + obj.ch
 
