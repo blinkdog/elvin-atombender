@@ -6,9 +6,6 @@
 {ImpossibleMission} = require './impossible'
 
 exports.run = ->
-  # nice little bits of CoffeeScript
-  # http://stackoverflow.com/a/4826179
-  Array::remove ?= (e) -> @[t..t] = [] if (t = @indexOf(e)) > -1
   # https://www.youtube.com/watch?v=FrLequ6dUdM
   if isMSIE()
     window.location.href = 'http://donotuseie.com/'

@@ -39,7 +39,7 @@ class Furniture
     @ch = me.ch
     @fg = me.fg
     @desc = me.desc
-    @time = me.time
+    @searchTime = me.time
     @visible = true
     
   getSpeed: -> -1

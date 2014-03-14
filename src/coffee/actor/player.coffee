@@ -67,16 +67,27 @@ class Player
           break
     
   use: ->
+    # reset the displayed search value
+    window.game.state.lastSearch = 0
+    # figure out what we might use here
     objHere = window.game.state.getObjectsAt @x, @y
     if objHere.length is 0
       alert 'Nothing Here'
       return
     for obj in objHere
-      switch obj.ch
-        when "M"
-          window.game.state.unlockDoor()
-        else
-          alert 'Unknown Object: ' + obj.ch
+      # if this is a searchable piece of furniture
+      if obj.searchTime?
+        obj.searchTime--
+        window.game.state.lastSearch = obj.searchTime
+        if obj.searchTime is 0
+          window.game.scheduler.add obj, false
+      # otherwise it is a security terminal or something else
+      else
+        switch obj.ch
+          when "M"
+            window.game.state.unlockDoor()
+          else
+            alert 'Unknown Object: ' + obj.ch
 
   openPocketComputer: ->
     window.game.state.pocketComputer = true

@@ -38,6 +38,7 @@ class GameState
     @player = new Player()
     @pocketComputer = false
     @started = false
+    @lastSearch = 0
     @layoutColor = Layout.paint @layout
     @initObjects()
 
@@ -279,7 +280,8 @@ class GameState
     (object for object in @objects when object.x is x and object.y is y)
     
   removeObject: (obj) ->
-    @objects = @objects.remove obj
+    @objects = @objects.filter (value, index, array) ->
+      return value isnt obj
     
 exports.GameState = GameState
 

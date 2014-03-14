@@ -6,9 +6,8 @@
 ** Search all files for "TODO"
 
 # Development TO DO
-* [X] Create Furniture object
-* [X] Modify GameState to add Furniture objects to game
-* Modify Player use routine to allow searching of furniture, reward of puzzle pieces
+* [X] Modify Player use routine to allow searching of furniture
+* [ ] Add search rewards; puzzle pieces, lift/snooze passwords, etc.
 * Modify GUI to display the puzzle pieces
 * Modify AccessPanel routine to require the possession of 36 puzzle pieces in order to win the game
 * Modify Player use routine to allow SecurityTerminal objects to temporarily lock the pit traps in a room
