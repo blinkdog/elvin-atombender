@@ -10,6 +10,8 @@
 # DEBUG: REMOVE THIS!
 {VK_X} = ROT
 
+CHANCE_DESTROY_HIM = 0.025
+
 class Player
   constructor: ->
     @x = 20
@@ -64,6 +66,8 @@ class Player
     # figure out the destination square
     newX = @x + dir.x
     newY = @y + dir.y
+    # determine if the player is changing rooms
+    changeRooms = isChangingRooms @x, @y, newX, newY
     # determine if the destination is legal
     if map[newY][newX] is ' '
       @x = newX
@@ -74,6 +78,11 @@ class Player
     if ((layoutX % 2) is 0) or ((layoutY % 2) is 0)
       @safeX = @x
       @safeY = @y
+    else
+      # if we're changing rooms to a non-safe room
+      if changeRooms
+        if ROT.RNG.getUniform() < CHANCE_DESTROY_HIM
+          window.game.sfx.playSound 'destroy-him'
     # determine if anything wants to interact with us
     objHere = state.getObjectsAt @x, @y
     for obj in objHere
@@ -123,5 +132,14 @@ class Player
 
 exports.Player = Player
 
+#----------------------------------------------------------------------
+
+isChangingRooms = (ox, oy, nx, ny) ->
+  olx = Math.floor ox / ROOM_SIZE.width
+  oly = Math.floor oy / ROOM_SIZE.height
+  nlx = Math.floor nx / ROOM_SIZE.width
+  nly = Math.floor ny / ROOM_SIZE.height
+  return ((olx isnt nlx) or (oly isnt nly))
+  
 #----------------------------------------------------------------------
 # end of player.coffee

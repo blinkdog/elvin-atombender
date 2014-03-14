@@ -6,9 +6,9 @@
 ** Search all files for "TODO"
 
 # Development TO DO
-* [X] Require the possession of 36 puzzle pieces in order to win the game
-* Create Robot object
-* Modify GameState to add Robot objects to game
+* [ ] Create Robot object
+* [ ] Modify GameState to add Robot objects to game
+* [X] Elvin instructs "Destroy him, my robots!"
 * Modify Robot to move around, fire lightning
 * Create DeathBall object
 * Modify GameState to add DeathBall objects to game

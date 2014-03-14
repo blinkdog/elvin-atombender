@@ -138,6 +138,7 @@ class GUI
     # fill the grid with magic pink hashes
       # DEBUG: Just to give a sense of the full display; remove later
     @fillRect 0, 0, dispW, dispH, '#', '#f0f', '#000'
+    #@fillRect 0, 0, dispW, dispH, ' ', '#fff', '#000'
     # render the defined map into the display
     for i in [0..dispH]
       for j in [0..dispW]
