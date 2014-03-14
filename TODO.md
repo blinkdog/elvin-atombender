@@ -7,7 +7,7 @@
 
 # Development TO DO
 * [X] Modify Player use routine to allow searching of furniture
-* [ ] Add search rewards; puzzle pieces, lift/snooze passwords, etc.
+* [X] Add search rewards; puzzle pieces, lift/snooze passwords, etc.
 * Modify GUI to display the puzzle pieces
 * Modify AccessPanel routine to require the possession of 36 puzzle pieces in order to win the game
 * Modify Player use routine to allow SecurityTerminal objects to temporarily lock the pit traps in a room

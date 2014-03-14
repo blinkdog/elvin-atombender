@@ -14,6 +14,9 @@ class Player
     @visible = true
     @safeX = @x
     @safeY = @y
+    @lift = 0
+    @snooze = 0
+    @puzzle = []
     
   getSpeed: -> 100
   
@@ -22,6 +25,10 @@ class Player
     window.addEventListener 'keydown', this
 
   handleEvent: (event) ->
+    # reset some temporary displays
+    window.game.state.lastSearch = 0
+    delete window.game.state.lastReward
+    # handle the player's input
     switch event.keyCode
       when VK_UP
         @move {x:0, y:-1}
@@ -67,8 +74,6 @@ class Player
           break
     
   use: ->
-    # reset the displayed search value
-    window.game.state.lastSearch = 0
     # figure out what we might use here
     objHere = window.game.state.getObjectsAt @x, @y
     if objHere.length is 0

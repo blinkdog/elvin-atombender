@@ -2,6 +2,12 @@
 # Copyright 2014 Patrick Meade. All rights reserved.
 #----------------------------------------------------------------------
 
+CHANCE_PASSWORD = 0.1
+CHANCE_PUZZLE = 0.3
+
+MIN_PITS = 1
+MAX_PITS = 6
+
 MIN_PER_HOUR = 60
 SEC_PER_MIN = 60
 MILLI_PER_SEC = 1000
@@ -12,12 +18,6 @@ TIME_LIMIT = 11 * SEC_PER_MIN * MILLI_PER_SEC
 
 TIME_PENALTY_FALL = 10 * SEC_PER_MIN * MILLI_PER_SEC
 TIME_PENALTY_REVEAL = 10 * MILLI_PER_SEC
-
-MIN_PITS = 1
-MAX_PITS = 6
-
-MIN_FURNITURE = 1
-MAX_FURNITURE = 10
 
 Layout = require './layout'
 Map = require './map'
@@ -102,7 +102,19 @@ class GameState
     return foundPit
 
   addReward: (reward) ->
-    alert 'Rewards not supported yet'
+    switch reward
+      when "LIFT"
+        @lastReward = "Password: Lock Pits"
+        @player.lift++
+      when "SNOOZE"
+        @lastReward = "Password: Robot Snooze"
+        @player.snooze++
+      when "NOTHING"
+        @lastReward = "Nothing Here"
+      else
+        @lastReward = "Puzzle: " + reward
+        @player.puzzle.push reward
+    window.game.gui.render this
 
   initObjects: ->
     @objects = []
@@ -218,20 +230,40 @@ class GameState
                 numPitTraps--
 
   initFurniture: ->
+    # create a list of all puzzle pieces
+    puzzleList = (i for i in [1..36])
+    # create a list of passwords
+    passwordList = ["LIFT", "SNOOZE"]
+    # create a list of rooms in the fortress
+    roomList = []
     for i in [0..@layout.length-1]
       for j in [0..@layout[i].length-1]
         switch @layout[i][j]
           when "R"
-            numFurniture = Math.floor(ROT.RNG.getUniform() * ((MAX_FURNITURE-MIN_FURNITURE)+1)) + MIN_FURNITURE
-            while numFurniture > 0
-              furnRoomOffsetX = Math.floor(ROT.RNG.getUniform() * ROOM_SIZE.width)
-              furnRoomOffsetY = Math.floor(ROT.RNG.getUniform() * ROOM_SIZE.height)
-              furnMapX = j*ROOM_SIZE.width + furnRoomOffsetX
-              furnMapY = i*ROOM_SIZE.height + furnRoomOffsetY
-              alreadyHere = @getObjectsAt furnMapX, furnMapY
-              if alreadyHere.length is 0
-                @addFurniture j, i, {x:furnRoomOffsetX, y:furnRoomOffsetY}
-                numFurniture--
+            roomList.push {x:j,y:i}
+    # while we still have puzzle pieces to give away
+    while puzzleList.length > 0
+      # determine a random reward
+      rewardChance = ROT.RNG.getUniform()
+      if rewardChance < CHANCE_PUZZLE
+        reward = puzzleList.random()
+      else if rewardChance < (CHANCE_PUZZLE + CHANCE_PASSWORD)
+        reward = passwordList.random()
+      else
+        reward = "NOTHING"
+      # determine a random room for the furniture to inhabit
+      room = roomList.random()
+      furnRoomOffsetX = Math.floor(ROT.RNG.getUniform() * ROOM_SIZE.width)
+      furnRoomOffsetY = Math.floor(ROT.RNG.getUniform() * ROOM_SIZE.height)
+      furnMapX = room.x*ROOM_SIZE.width + furnRoomOffsetX
+      furnMapY = room.y*ROOM_SIZE.height + furnRoomOffsetY
+      # see if anything already occupies that spot in the room
+      alreadyHere = @getObjectsAt furnMapX, furnMapY
+      if alreadyHere.length is 0
+        # add it to the room and remove the puzzle piece (if any)
+        @addFurniture room.x, room.y, {x:furnRoomOffsetX, y:furnRoomOffsetY}, reward
+        puzzleList = puzzleList.filter (value, index, array) ->
+          return value isnt reward
 
   addSecurityTerminal: (layoutX, layoutY, mapOffset) ->
     mapX = layoutX*ROOM_SIZE.width
@@ -268,12 +300,12 @@ class GameState
     pitTrap = new PitTrap termX, termY, {x:layoutX, y:layoutY}
     @objects.push pitTrap
 
-  addFurniture: (layoutX, layoutY, mapOffset) ->
+  addFurniture: (layoutX, layoutY, mapOffset, reward) ->
     mapX = layoutX*ROOM_SIZE.width
     mapY = layoutY*ROOM_SIZE.height
     termX = mapX + mapOffset.x
     termY = mapY + mapOffset.y
-    furniture = new Furniture termX, termY, {x:layoutX, y:layoutY}, 'REWARD'
+    furniture = new Furniture termX, termY, {x:layoutX, y:layoutY}, reward
     @objects.push furniture
 
   getObjectsAt: (x,y) ->

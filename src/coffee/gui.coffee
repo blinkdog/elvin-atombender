@@ -102,12 +102,30 @@ class GUI
     bg = state.layoutColor[layoutY][layoutX]
     @display.draw centerX, centerY, '@', '#fff', bg
     # render the search bar at the top
-    @renderSearch state
+    @renderTopBar state
     # render the timer bar at the bottom
     @renderTime state
     # render the pocket computer, if it's open
     if state.pocketComputer
       @renderPocketComputer state
+      
+  renderTopBar: (state) ->
+    if state.lastReward?
+      # define some time savers
+      centerX = Math.floor DISPLAY_SIZE.width / 2
+      centerY = Math.floor DISPLAY_SIZE.height / 2
+      dispW = DISPLAY_SIZE.width-1
+      dispH = DISPLAY_SIZE.height-1
+      {map, player} = state
+      # make room to display the search bar at the top
+      @fillRect 0, 0, dispW, 0, ' ', '#fff', '#000'
+      # build up the searching string
+      space = (DISPLAY_SIZE.width - state.lastReward.length) >> 1
+      rewardMsg = "%c{yellow}" + state.lastReward
+      # draw it to the display
+      @display.drawText space, 0, rewardMsg
+    else
+      @renderSearch state
 
   renderSearch: (state) ->
     # don't render the bar if the player isn't searching
