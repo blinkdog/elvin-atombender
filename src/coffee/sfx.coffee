@@ -12,7 +12,8 @@ SOUNDS = [
   "pc-negative",
   "pc-off",
   "pc-on",
-  "pc-positive"
+  "pc-positive",
+  "player-zapped"
 ]
 
 class SoundBoard

@@ -6,10 +6,7 @@
 ** Search all files for "TODO"
 
 # Development TO DO
-* [X] Create Robot object
-* [X] Modify GameState to add Robot objects to game
-* [X] Elvin instructs "Destroy him, my robots!"
-* Modify Robot to move around, fire lightning
+* [X] Modify Robot to move around, fire lightning
 * Create DeathBall object
 * Modify GameState to add DeathBall objects to game
 * Modify DeathBall to seek out player
@@ -24,7 +21,7 @@
 * Modify handleEvent in Player to allow pocket computer to hack robot disable passwords in exchange for time
 
 # Extra Time TO DO
-* Expand the furniture list; let the letters be random
+* Expand the furniture list; let the letters and time be random
 * Modify Roomba to move so the player must chase it down to search it
 * Arrange the password letters vertically in pairs next to mini-map in pocket computer
 ** Use green/yellow/cyan background with black letters

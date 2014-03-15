@@ -19,8 +19,10 @@ MILLI_PER_SEC = 1000
 
 TIME_LIMIT = 6 * MIN_PER_HOUR * SEC_PER_MIN * MILLI_PER_SEC
 
+TIME_PENALTY_COLLIDE = 10 * SEC_PER_MIN * MILLI_PER_SEC
 TIME_PENALTY_FALL = 10 * SEC_PER_MIN * MILLI_PER_SEC
 TIME_PENALTY_REVEAL = 10 * MILLI_PER_SEC
+TIME_PENALTY_ZAP = 10 * SEC_PER_MIN * MILLI_PER_SEC
 
 Layout = require './layout'
 Map = require './map'
@@ -34,6 +36,7 @@ Map = require './map'
 {Player} = require './actor/player'
 {Robot} = require './actor/robot'
 {Terminal} = require './actor/terminal'
+{Zap} = require './actor/zap'
 
 {ROT} = require './rot.min'
 {PUZZLES} = require './gui'
@@ -120,6 +123,16 @@ class GameState
       else
         @lastReward = "Secure Room Password Fragment"
         @player.puzzle.push reward
+    window.game.gui.render this
+
+  collide: ->
+    @timeLimit -= TIME_PENALTY_COLLIDE
+    window.game.scheduler.add new Zap()
+    window.game.gui.render this
+
+  zap: ->
+    @timeLimit -= TIME_PENALTY_ZAP
+    window.game.scheduler.add new Zap()
     window.game.gui.render this
 
   initObjects: ->

@@ -81,6 +81,14 @@ FLIPS =
 PUZZLE_WIDTH = 2
 PUZZLE_HEIGHT = 3
 
+# oh hush, I felt just as dirty writing the variable name as you did reading it
+SHADES_OF_GREY = [
+  '#000', '#111', '#222', '#333', 
+  '#444', '#555', '#666', '#777', 
+  '#888', '#999', '#aaa', '#bbb', 
+  '#ccc', '#ddd', '#eee', '#fff'
+]
+
 class GUI
   constructor: ->
   
@@ -149,7 +157,6 @@ class GUI
         if (mapX >= 0) and (mapX < map[0].length)
           if (mapY >= 0) and (mapY < map.length)
             if (visibleMap[mapY][mapX] is VISIBLE)
-              @visibleLayout[layoutY][layoutX] = VISIBLE
               if map[mapY][mapX] is ' ' 
                 bg = state.layoutColor[layoutY][layoutX]
               else
@@ -159,11 +166,34 @@ class GUI
               for obj in objHere
                 if obj.visible or (obj.ch is '▒')  # DEBUG: Test pit sensor!
                   @display.draw j, i, obj.ch, obj.fg, bg
+    # render robot electricity into the display
+    for i in [0..dispH]
+      for j in [0..dispW]
+        mapX = ((player.x - centerX) + j)
+        mapY = ((player.y - centerY) + i)
+        layoutX = Math.floor (mapX / Map.ROOM_SIZE.width)
+        layoutY = Math.floor (mapY / Map.ROOM_SIZE.height)
+        if (mapX >= 0) and (mapX < map[0].length)
+          if (mapY >= 0) and (mapY < map.length)
+            if (visibleMap[mapY][mapX] is VISIBLE)
+              if map[mapY][mapX] is ' ' 
+                bg = state.layoutColor[layoutY][layoutX]
+              else
+                bg = '#000'
+              objHere = state.getObjectsAt mapX, mapY
+              for obj in objHere
+                if obj.ch is 'R'
+                  for bzzt in obj.elec
+                    @display.draw j+(bzzt.x-obj.x), i+(bzzt.y-obj.y), 'X', SHADES_OF_GREY.random(), bg
     # render the player into the display
     layoutX = Math.floor (player.x / Map.ROOM_SIZE.width)
     layoutY = Math.floor (player.y / Map.ROOM_SIZE.height)
     bg = state.layoutColor[layoutY][layoutX]
     @display.draw centerX, centerY, '@', '#fff', bg
+    # update the visibility of the fortress map
+    for i in [layoutY-1..layoutY+1]
+      for j in [layoutX-1..layoutX+1]
+        @visibleLayout[i][j] = VISIBLE
     # render the search bar at the top
     @renderTopBar state
     # render the timer bar at the bottom
@@ -279,8 +309,8 @@ class GUI
           fg = '#fff'
         # if we've seen it, display it
           # DEBUG: Make sure the whole map is vvvvvvvvvvvvv visible
-        if (@visibleLayout[i][j] is VISIBLE) or (1 is 1)
-        #if (@visibleLayout[i][j] is VISIBLE)
+          #if (@visibleLayout[i][j] is VISIBLE) or (1 is 1)
+        if (@visibleLayout[i][j] is VISIBLE)
           @display.draw miniX1+j+1, miniY1+i+1, ch, fg, bg
         else
           @display.draw miniX1+j+1, miniY1+i+1, ' ', fg, bg
