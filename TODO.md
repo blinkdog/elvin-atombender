@@ -1,4 +1,4 @@
-## Release TO DO
+# Release TO DO
 * Remove errant debugging calls hanging around
 ** Search all files for "alert"
 ** Search all files for "DEBUG"
@@ -6,11 +6,8 @@
 ** Search all files for "TODO"
 
 # Development TO DO
-* [X] Create DeathBall object
-* [X] Modify GameState to add DeathBall objects to game
-* [X] Modify DeathBall to seek out player
-* Modify Player use routine to allow SecurityTerminal objects to temporarily lock the pit traps in a room
-* Modify SecurityTerminal to lock and eventually unlock the pit traps
+* [X] Modify Player use routine to allow SecurityTerminal objects to temporarily lock the pit traps in a room
+* [X] Modify SecurityTerminal to lock and eventually unlock the pit traps
 * Modify Player use routine to allow SecurityTerminal objects to temporarily disable the robots in a room
 * Modify SecurityTerminal to disable and eventually reenable the robots
 * Modify Player use routine to allow SecurityTerminal objects to temporarily disable death balls in a room
@@ -26,3 +23,23 @@
 ** Use green/yellow/cyan background with black letters
 * Modify pocket computer handling of puzzle pieces; allow swapping and rotation
 * Modify pocket computer to dial for proper orientation and position in exchange for time
+
+# Notes and Such
+
+## Security Terminals
+
+    *** SECURITY TERMINAL ## ***
+
+          SELECT FUNCTION
+
+        RESET LIFTING PLATFORMS
+          IN THIS ROOM.
+
+        TEMPORARILY DISABLE
+          ROBOTS IN THIS ROOM.
+
+    ==> LOG OFF.
+
+    #####################
+    # PASSWORD ACCEPTED #
+    #####################

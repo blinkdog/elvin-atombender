@@ -2,6 +2,13 @@
 # Copyright 2014 Patrick Meade. All rights reserved.
 #----------------------------------------------------------------------
 
+{ROT} = require '../rot.min'
+{VK_DOWN, VK_SPACE, VK_UP} = ROT
+
+{EnablePits} = require './enablePits'
+
+TURNS_DISABLE_PITS = 40
+
 class Terminal
   constructor: (@x, @y, @layoutRoom)->
     @ch = 'S'
@@ -9,10 +16,63 @@ class Terminal
     @bg = '#000'
     @desc = 'Security Terminal'
     @visible = true
+    @accepted = false
+    @required = false
     
-  getSpeed: -> 100
+  getSpeed: -> -1
   
   act: ->
+    @cursor = 2
+    window.game.engine.lock()
+    window.game.sfx.playSound 'pc-on'
+    window.addEventListener 'keydown', this
+
+  handleEvent: (event) ->
+    @accepted = false
+    @required = false
+    switch event.keyCode
+      when VK_UP
+        @cursor = Math.max(0, @cursor-1)
+      when VK_DOWN
+        @cursor = Math.min(2, @cursor+1)
+      when VK_SPACE
+        switch @cursor
+          when 0
+            @disablePits()
+          when 1
+            @disableRobots()
+          when 2
+            @logOffSecurityTerminal()
+    window.game.gui.render window.game.state
+
+  disablePits: ->
+    {state} = window.game
+    {player} = state
+    if player.lift < 0
+      @required = true
+      return
+    player.lift--
+    @accepted = true
+    # lock pits
+    pits = state.objects.filter (value, index, array) =>
+      return (value.ch is '▒') and (value.layoutRoom.x is @layoutRoom.x) and (value.layoutRoom.y is @layoutRoom.y)
+    enablePits = new EnablePits pits, TURNS_DISABLE_PITS
+    window.game.scheduler.add enablePits, true
+    for pit in pits
+      pit.locked = true
+      pit.visible = true
+
+  disableRobots: ->
+    @cursor = @cursor
+    @accepted = true
+
+  logOffSecurityTerminal: ->
+    delete window.game.state.securityTerminal
+    window.game.scheduler.remove this
+    window.removeEventListener 'keydown', this
+    window.game.sfx.playSound 'pc-off'
+    window.game.engine.unlock()
+    window.game.gui.render window.game.state
 
 exports.Terminal = Terminal
 

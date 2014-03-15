@@ -335,7 +335,9 @@ class GameState
     termY = mapY + mapOffset.y
     terminal = new Terminal termX, termY, {x:layoutX, y:layoutY}
     @objects.push terminal
-    window.game.scheduler.add terminal, true
+    # security terminals are now added when used
+    # see Player.use for 'S' objects
+    #window.game.scheduler.add terminal, true
 
   addAccessPanel: (layoutX, layoutY, mapOffset) ->
     mapX = layoutX*ROOM_SIZE.width

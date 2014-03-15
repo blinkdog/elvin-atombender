@@ -3,7 +3,7 @@
 #----------------------------------------------------------------------
 
 {ROT} = require '../rot.min'
-{VK_DOWN, VK_LEFT, VK_M, VK_P, VK_RIGHT, VK_SPACE, VK_UP} = ROT
+{VK_DOWN, VK_LEFT, VK_M, VK_S, VK_RIGHT, VK_SPACE, VK_UP} = ROT
 {PocketComputer} = require './computer'
 {ROOM_SIZE} = require '../map'
 
@@ -12,6 +12,10 @@
 
 CHANCE_DESTROY_HIM = 0.025
 
+NUM_STARTING_PASSWORD =
+  LIFT: 2
+  SNOOZE: 2
+
 class Player
   constructor: ->
     @x = 20
@@ -19,8 +23,8 @@ class Player
     @visible = true
     @safeX = @x
     @safeY = @y
-    @lift = 0
-    @snooze = 0
+    @lift = NUM_STARTING_PASSWORD.LIFT
+    @snooze = NUM_STARTING_PASSWORD.SNOOZE
     @puzzle = []
     
   getSpeed: -> 100
@@ -47,15 +51,14 @@ class Player
         @use()
       when VK_M
         @openPocketComputer()
-      when VK_P
+      when VK_S
         @revealPits()
       # DEBUG: REMOVE THIS!!
       when VK_X
         @puzzle = []
         for i in [0..35]
           @puzzle.push i
-
-        
+    # regardless, let's get back to the game
     window.removeEventListener 'keydown', this
     window.game.engine.unlock()
     window.game.gui.render window.game.state
@@ -88,8 +91,9 @@ class Player
     for obj in objHere
       switch obj.ch
         when "▒"
-          state.fall obj
-          break
+          if not obj.locked
+            state.fall obj
+            break
     
   use: ->
     # figure out what we might use here
@@ -112,6 +116,11 @@ class Player
               window.game.state.unlockDoor()
             else
               window.game.sfx.playSound 'elvin-laugh'
+          when "S"                             # security terminal
+            window.game.state.securityTerminal = obj
+            window.game.scheduler.add obj, true
+          when "▒"                             # locked pit trap
+            obj=obj
           else
             alert 'Unknown Object: ' + obj.ch
 

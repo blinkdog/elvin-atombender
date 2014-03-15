@@ -164,7 +164,8 @@ class GUI
               @display.draw j, i, map[mapY][mapX], '#888', bg
               objHere = state.getObjectsAt mapX, mapY
               for obj in objHere
-                if obj.visible or (obj.ch is '▒')  # DEBUG: Test pit sensor!
+                #if obj.visible or (obj.ch is '▒')  # DEBUG: Test pit sensor!
+                if obj.visible
                   @display.draw j, i, obj.ch, obj.fg, bg
     # render robot electricity into the display
     for i in [0..dispH]
@@ -201,6 +202,9 @@ class GUI
     # render the pocket computer, if it's open
     if state.pocketComputer
       @renderPocketComputer state
+    # render the security terminal, if we're logged on
+    if state.securityTerminal?
+      @renderSecurityTerminal state
       
   renderTopBar: (state) ->
     if state.lastReward?
@@ -248,7 +252,10 @@ class GUI
     # make room to display some status stuff at the bottom
     @fillRect 0, dispH, dispW, dispH, ' ', '#fff', '#000'
     # render the name of the pocket computer at the bottom
-    pocketComputer = "%c{yellow}[%c{cyan}M%c{yellow}]%c{cyan}1A9366b  %c{yellow}[%c{cyan}P%c{yellow}]%c{cyan}it Sensor"
+    pocketComputer = "%c{yellow}[%c{cyan}M%c{yellow}]%c{cyan}1A9366b  %c{yellow}[%c{cyan}S%c{yellow}]%c{cyan}can Pits  %c{purple}Pit-Lock:%c{yellow}"
+    pocketComputer += state.player.lift
+    pocketComputer += "  %c{purple}Snooze:%c{yellow}"
+    pocketComputer += state.player.snooze
     @display.drawText 0, dispH, pocketComputer
     # render the time remaining at the bottom
     if state.finished?
@@ -323,8 +330,48 @@ class GUI
       @drawBox puzX1, puzY1, puzX2, puzY2, BOX.single, '#d5df7c', '#000'
       @drawPuzzle state, i, puzX1, puzY1
     # display the pit sensor capability
-    pitSensor = "%c{yellow}[%c{cyan}P%c{yellow}]%c{cyan}it Sensor"
-    @display.drawText miniX2+1, miniY2, pitSensor
+    # TODO: I don't like this here ... leave it on the main screen?
+#    pitSensor = "%c{yellow}[%c{cyan}P%c{yellow}]%c{cyan}it Sensor"
+#    @display.drawText miniX2+1, miniY2, pitSensor
+
+  renderSecurityTerminal: (state) ->
+    # define some constants
+    SECURE = {W:29, H:14}
+    # calculate some time savers
+    centerX = Math.floor DISPLAY_SIZE.width / 2
+    centerY = Math.floor DISPLAY_SIZE.height / 2
+    dispW = DISPLAY_SIZE.width-1
+    dispH = DISPLAY_SIZE.height-1
+    {layout, map, player, securityTerminal} = state
+    # figure out where the security terminal will display
+    stX1 = (dispW - SECURE.W) >> 1
+    stY1 = (dispH - SECURE.H) >> 1
+    stX2 = stX1 + SECURE.W
+    stY2 = stY1 + SECURE.H
+    # clear the area for the security terminal to display
+    @fillRect stX1, stY1, stX2, stY2, ' ', '#fff', '#000'
+    @drawBox stX1, stY1, stX2, stY2, BOX.single, '#b3b3b3', '#000'
+    @fillRect stX1+1, stY1+1, stX2-1, stY2-1, ' ', '#e2e06e', '#5d4300'
+    # display the text of the security terminal
+    @display.drawText stX1+2, stY1+2, '%c{#e2e06e}%b{#5d4300}*** SECURITY  TERMINAL ***'
+    @display.drawText stX1+8, stY1+4, '%c{#e2e06e}%b{#5d4300}SELECT FUNCTION'
+    @display.drawText stX1+6, stY1+6, '%c{#e2e06e}%b{#5d4300}TEMPORARILY LOCK'
+    @display.drawText stX1+8, stY1+7, '%c{#e2e06e}%b{#5d4300}PITS IN THIS ROOM'
+    @display.drawText stX1+6, stY1+9, '%c{#e2e06e}%b{#5d4300}TEMPORARILY DISABLE'
+    @display.drawText stX1+8, stY1+10, '%c{#e2e06e}%b{#5d4300}ROBOTS IN THIS ROOM'
+    @display.drawText stX1+6, stY1+12, '%c{#e2e06e}%b{#5d4300}LOG OFF'
+    cursorY = stY1+6 + securityTerminal.cursor*3
+    @display.drawText stX1+2, cursorY, '%c{#e2e06e}%b{#5d4300}==>'
+    # if we've accepted a password
+    if securityTerminal.accepted
+      @fillRect stX1+6, cursorY, stX1+26, cursorY+2, ' ', '#5d4300', '#e2e06e'
+      @fillRect stX1+7, cursorY+1, stX1+25, cursorY+1, ' ', '#e2e06e', '#5d4300'
+      @display.drawText stX1+8, cursorY+1, '%c{#e2e06e}%b{#5d4300}PASSWORD ACCEPTED'
+    # if we require a password
+    if securityTerminal.required
+      @fillRect stX1+6, cursorY, stX1+26, cursorY+2, ' ', '#5d4300', '#e2e06e'
+      @fillRect stX1+7, cursorY+1, stX1+25, cursorY+1, ' ', '#e2e06e', '#5d4300'
+      @display.drawText stX1+8, cursorY+1, '%c{#e2e06e}%b{#5d4300}PASSWORD REQUIRED'
 
   fillRect: (x1, y1, x2, y2, ch, fg, bg) ->
     for y in [y1..y2]
