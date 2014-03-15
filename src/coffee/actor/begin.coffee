@@ -12,9 +12,9 @@ class BeginGame
     window.game.engine.lock()
     window.game.scheduler.add window.game.state.player, true
     window.game.sfx.playSound 'another-visitor'
-# DEBUG: Shorter time to game start for debugging purposes
-#    setTimeout window.game.state.startGame, 7000
-    setTimeout window.game.state.startGame, 1
+#    # DEBUG: Shorter time to game start for debugging purposes
+#    setTimeout window.game.state.startGame, 1
+    setTimeout window.game.state.startGame, 7000
 
 exports.BeginGame = BeginGame
 

@@ -143,9 +143,8 @@ class GUI
       return (map[y][x] is ' ')
     mapFov = new ROT.FOV.PreciseShadowcasting lightPasses
     mapFov.compute player.x, player.y, maxVisibilityDistance, updateVisibleMap
-    # fill the grid with magic pink hashes
-      # DEBUG: Just to give a sense of the full display; remove later
-      #@fillRect 0, 0, dispW, dispH, '#', '#f0f', '#000'
+#    # DEBUG: fill the grid with magic pink hashes to show the full display
+#    @fillRect 0, 0, dispW, dispH, '#', '#f0f', '#000'
     @fillRect 0, 0, dispW, dispH, ' ', '#fff', '#000'
     # render the defined map into the display
     for i in [0..dispH]
@@ -164,7 +163,8 @@ class GUI
               @display.draw j, i, map[mapY][mapX], '#888', bg
               objHere = state.getObjectsAt mapX, mapY
               for obj in objHere
-                #if obj.visible or (obj.ch is '▒')  # DEBUG: Test pit sensor!
+                # DEBUG: Test pit sensor
+                #if obj.visible or (obj.ch is '▒')
                 if obj.visible
                   @display.draw j, i, obj.ch, obj.fg, bg
     # render robot electricity into the display
@@ -317,9 +317,9 @@ class GUI
         if (j is playerLayoutX) and (i is playerLayoutY)
           fg = '#fff'
         # if we've seen it, display it
-          # DEBUG: Make sure the whole map is vvvvvvvvvvvvv visible
-        if (@visibleLayout[i][j] is VISIBLE) or (1 is 1)
-        #if (@visibleLayout[i][j] is VISIBLE)
+        # DEBUG: Make sure the whole fortress map is visible
+        #if (@visibleLayout[i][j] is VISIBLE) or (1 is 1)
+        if (@visibleLayout[i][j] is VISIBLE)
           @display.draw miniX1+j+1, miniY1+i+1, ch, fg, bg
         else
           @display.draw miniX1+j+1, miniY1+i+1, ' ', fg, bg
@@ -332,10 +332,6 @@ class GUI
         puzY2 = puzY1+PUZZLE_HEIGHT+1
         @drawBox puzX1, puzY1, puzX2, puzY2, BOX.single, '#d5df7c', '#000'
         @drawPuzzle state, i*2+j, puzX1, puzY1
-    # display the pit sensor capability
-    # TODO: I don't like this here ... leave it on the main screen?
-#    pitSensor = "%c{yellow}[%c{cyan}P%c{yellow}]%c{cyan}it Sensor"
-#    @display.drawText miniX2+1, miniY2, pitSensor
 
   renderSecurityTerminal: (state) ->
     # define some constants

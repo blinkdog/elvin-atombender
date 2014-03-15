@@ -7,8 +7,8 @@
 {PocketComputer} = require './computer'
 {ROOM_SIZE} = require '../map'
 
-# DEBUG: REMOVE THIS!
-{VK_X} = ROT
+## DEBUG: Cheat Key
+#{VK_X} = ROT
 
 CHANCE_DESTROY_HIM = 0.025
 CHANCE_HACK_SUCCEED = 0.75
@@ -61,14 +61,14 @@ class Player
         @openPocketComputer()
       when VK_S
         @revealPits()
-      # DEBUG: REMOVE THIS!!
-      when VK_X
-        @puzzle = []
-        for i in [0..35]
-          @puzzle.push i
-        for y in [0..(window.game.gui.visibleLayout.length-1)]
-          for x in [0..(window.game.gui.visibleLayout[i]-1)]
-            window.game.gui.visibleLayout[y][x] = '!'
+#      # DEBUG: Cheat Key
+#      when VK_X
+#        @puzzle = []
+#        for i in [0..35]
+#          @puzzle.push i
+#        for y in [0..(window.game.gui.visibleLayout.length-1)]
+#          for x in [0..(window.game.gui.visibleLayout[i]-1)]
+#            window.game.gui.visibleLayout[y][x] = '!'
     # regardless, let's get back to the game
     window.removeEventListener 'keydown', this
     window.game.engine.unlock()
@@ -130,10 +130,13 @@ class Player
           when "S"                             # security terminal
             window.game.state.securityTerminal = obj
             window.game.scheduler.add obj, true
-          when "▒"                             # locked pit trap
-            obj=obj
+#          # DEBUG: Show the obj; we don't have a handler routine
+#          when "▒"                             # locked pit trap
+#            obj=obj
+#          else
+#            alert 'Unknown Object: ' + obj.ch
           else
-            alert 'Unknown Object: ' + obj.ch
+            obj=obj
 
   openPocketComputer: ->
     window.game.state.pocketComputer = true
