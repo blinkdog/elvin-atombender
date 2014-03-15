@@ -9,8 +9,7 @@
 ** Search all files for "TODO"
 
 # Development TO DO
-* [X] Modify handleEvent in Player to allow pocket computer to hack terminals for passwords in exchange for time
-* Expand the furniture list; let the letters and time be random
+* [X] Expand the furniture list; let the letters and time be random
 * Add storyline modal dialogs at the outset of the game
 
 # TO Wish I Had Enough Time To DO

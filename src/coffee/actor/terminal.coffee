@@ -8,8 +8,8 @@
 {EnablePits} = require './enablePits'
 {EnableRobots} = require './enableRobots'
 
-TURNS_DISABLE_PITS = 50
-TURNS_DISABLE_ROBOTS = 50
+TURNS_DISABLE_PITS = 30
+TURNS_DISABLE_ROBOTS = 75
 
 class Terminal
   constructor: (@x, @y, @layoutRoom)->
