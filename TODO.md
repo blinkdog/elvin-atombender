@@ -1,18 +1,16 @@
 # Release TO DO
-* Clean up GUI
-** Remove magic pink hashes in the display
-** Fix pocket computer display
+* [X] Clean up GUI
+** [X] Remove magic pink hashes in the display
+** [X] Fix pocket computer display
 * Remove errant debugging calls hanging around
 ** Search all files for "alert"
 ** Search all files for "DEBUG"
 ** Search all files for "console"
 ** Search all files for "TODO"
 
-# Development TO DO
-* [X] Expand the furniture list; let the letters and time be random
-* Add storyline modal dialogs at the outset of the game
-
 # TO Wish I Had Enough Time To DO
+* Add storyline modal dialogs at the outset of the game
+** https://archive.org/details/Impossible_Mission_1984_Epyx
 * Modify Roomba to move so the player must chase it down to search it
 * Arrange the password letters vertically in pairs next to mini-map in pocket computer
 ** Use green/yellow/cyan background with black letters

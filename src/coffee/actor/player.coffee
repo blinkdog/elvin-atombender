@@ -66,6 +66,9 @@ class Player
         @puzzle = []
         for i in [0..35]
           @puzzle.push i
+        for y in [0..(window.game.gui.visibleLayout.length-1)]
+          for x in [0..(window.game.gui.visibleLayout[i]-1)]
+            window.game.gui.visibleLayout[y][x] = '!'
     # regardless, let's get back to the game
     window.removeEventListener 'keydown', this
     window.game.engine.unlock()

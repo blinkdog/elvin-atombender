@@ -145,8 +145,8 @@ class GUI
     mapFov.compute player.x, player.y, maxVisibilityDistance, updateVisibleMap
     # fill the grid with magic pink hashes
       # DEBUG: Just to give a sense of the full display; remove later
-    @fillRect 0, 0, dispW, dispH, '#', '#f0f', '#000'
-    #@fillRect 0, 0, dispW, dispH, ' ', '#fff', '#000'
+      #@fillRect 0, 0, dispW, dispH, '#', '#f0f', '#000'
+    @fillRect 0, 0, dispW, dispH, ' ', '#fff', '#000'
     # render the defined map into the display
     for i in [0..dispH]
       for j in [0..dispW]
@@ -252,7 +252,7 @@ class GUI
     # make room to display some status stuff at the bottom
     @fillRect 0, dispH, dispW, dispH, ' ', '#fff', '#000'
     # render the name of the pocket computer at the bottom
-    pocketComputer = "%c{yellow}[%c{cyan}H%c{yellow}]%c{cyan}ack  %c{yellow}[%c{cyan}M%c{yellow}]%c{cyan}1A9366b  %c{yellow}[%c{cyan}S%c{yellow}]%c{cyan}can  %c{purple}Pit-Lock:%c{yellow}"
+    pocketComputer = "%c{yellow}[%c{cyan}H%c{yellow}]%c{cyan}ack  %c{yellow}[%c{cyan}M%c{yellow}]%c{cyan}IA9366b  %c{yellow}[%c{cyan}S%c{yellow}]%c{cyan}can  %c{purple}Pit-Lock:%c{yellow}"
     pocketComputer += state.player.lift
     pocketComputer += "  %c{purple}Snooze:%c{yellow}"
     pocketComputer += state.player.snooze
@@ -266,6 +266,8 @@ class GUI
     @display.drawText dispW-7, dispH, timeLeft
 
   renderPocketComputer: (state) ->
+    # define some constants
+    POCKET = {W:30, H:16}
     # define some time savers
     centerX = Math.floor DISPLAY_SIZE.width / 2
     centerY = Math.floor DISPLAY_SIZE.height / 2
@@ -273,10 +275,10 @@ class GUI
     dispH = DISPLAY_SIZE.height-1
     {layout, map, player} = state
     # figure out where the pocket computer will display
-    pcX1 = 0
-    pcY1 = (dispH - centerY) >> 1
-    pcX2 = dispW
-    pcY2 = pcY1 + centerY
+    pcX1 = (dispW - POCKET.W) >> 1
+    pcY1 = (dispH - POCKET.H) >> 1
+    pcX2 = pcX1 + POCKET.W
+    pcY2 = pcY1 + POCKET.H
     # figure out where the minimap will display
     miniX1 = pcX1+1
     miniY1 = pcY1+1
@@ -316,19 +318,20 @@ class GUI
           fg = '#fff'
         # if we've seen it, display it
           # DEBUG: Make sure the whole map is vvvvvvvvvvvvv visible
-          #if (@visibleLayout[i][j] is VISIBLE) or (1 is 1)
-        if (@visibleLayout[i][j] is VISIBLE)
+        if (@visibleLayout[i][j] is VISIBLE) or (1 is 1)
+        #if (@visibleLayout[i][j] is VISIBLE)
           @display.draw miniX1+j+1, miniY1+i+1, ch, fg, bg
         else
           @display.draw miniX1+j+1, miniY1+i+1, ' ', fg, bg
     # display the boxes for the puzzle pieces
-    for i in [0..5]
-      puzX1 = miniX2+i*(PUZZLE_WIDTH+2)+1
-      puzY1 = pcY1+1
-      puzX2 = puzX1+PUZZLE_WIDTH+1
-      puzY2 = puzY1+PUZZLE_HEIGHT+1
-      @drawBox puzX1, puzY1, puzX2, puzY2, BOX.single, '#d5df7c', '#000'
-      @drawPuzzle state, i, puzX1, puzY1
+    for i in [0..2]
+      for j in [0..1]
+        puzX1 = miniX2+j*(PUZZLE_WIDTH+2)+1
+        puzY1 = pcY1+i*(PUZZLE_HEIGHT+2)+1
+        puzX2 = puzX1+PUZZLE_WIDTH+1
+        puzY2 = puzY1+PUZZLE_HEIGHT+1
+        @drawBox puzX1, puzY1, puzX2, puzY2, BOX.single, '#d5df7c', '#000'
+        @drawPuzzle state, i*2+j, puzX1, puzY1
     # display the pit sensor capability
     # TODO: I don't like this here ... leave it on the main screen?
 #    pitSensor = "%c{yellow}[%c{cyan}P%c{yellow}]%c{cyan}it Sensor"
