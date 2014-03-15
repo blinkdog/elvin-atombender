@@ -252,7 +252,7 @@ class GUI
     # make room to display some status stuff at the bottom
     @fillRect 0, dispH, dispW, dispH, ' ', '#fff', '#000'
     # render the name of the pocket computer at the bottom
-    pocketComputer = "%c{yellow}[%c{cyan}M%c{yellow}]%c{cyan}1A9366b  %c{yellow}[%c{cyan}S%c{yellow}]%c{cyan}can Pits  %c{purple}Pit-Lock:%c{yellow}"
+    pocketComputer = "%c{yellow}[%c{cyan}H%c{yellow}]%c{cyan}ack  %c{yellow}[%c{cyan}M%c{yellow}]%c{cyan}1A9366b  %c{yellow}[%c{cyan}S%c{yellow}]%c{cyan}can  %c{purple}Pit-Lock:%c{yellow}"
     pocketComputer += state.player.lift
     pocketComputer += "  %c{purple}Snooze:%c{yellow}"
     pocketComputer += state.player.snooze

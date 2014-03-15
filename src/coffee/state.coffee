@@ -122,6 +122,16 @@ class GameState
         @player.snooze++
       when "NOTHING"
         @lastReward = "Nothing Here"
+      when "HACKNONE"
+        @lastReward = "Hacking Failed"
+      when "HACKLIFT"
+        @lastReward = "Hacked: Lock Pits"
+        @player.lift++
+      when "HACKSNOOZE"
+        @lastReward = "Hacked: Robot Snooze"
+        @player.snooze++
+      when "NEEDTERM"
+        @lastReward = "Security Terminal Required"
       else
         @lastReward = "Secure Room Password Fragment"
         @player.puzzle.push reward

@@ -9,9 +9,7 @@
 ** Search all files for "TODO"
 
 # Development TO DO
-* [X] Modify Terminal object to temporarily disable robots and deathballs in a room
-* [X] Create EnableRobots to re-enable robots and deathballs after a time
-* Modify handleEvent in Player to allow pocket computer to hack terminals for passwords in exchange for time
+* [X] Modify handleEvent in Player to allow pocket computer to hack terminals for passwords in exchange for time
 * Expand the furniture list; let the letters and time be random
 * Add storyline modal dialogs at the outset of the game
 

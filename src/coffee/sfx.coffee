@@ -5,6 +5,7 @@
 SOUNDS = [
   "another-visitor",
   "destroy-him",
+  "dial-a-hack",
   "elvin-laugh",
   "elvin-no",
   "falling",

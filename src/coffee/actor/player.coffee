@@ -3,7 +3,7 @@
 #----------------------------------------------------------------------
 
 {ROT} = require '../rot.min'
-{VK_DOWN, VK_LEFT, VK_M, VK_S, VK_RIGHT, VK_SPACE, VK_UP} = ROT
+{VK_DOWN, VK_H, VK_LEFT, VK_M, VK_S, VK_RIGHT, VK_SPACE, VK_UP} = ROT
 {PocketComputer} = require './computer'
 {ROOM_SIZE} = require '../map'
 
@@ -11,10 +11,16 @@
 {VK_X} = ROT
 
 CHANCE_DESTROY_HIM = 0.025
+CHANCE_HACK_SUCCEED = 0.75
 
 NUM_STARTING_PASSWORD =
-  LIFT: 2
-  SNOOZE: 2
+  LIFT: 3
+  SNOOZE: 3
+
+MIN_PER_HOUR = 60
+SEC_PER_MIN = 60
+MILLI_PER_SEC = 1000
+TIME_PENALTY_HACK = 2 * SEC_PER_MIN * MILLI_PER_SEC
 
 class Player
   constructor: ->
@@ -49,6 +55,8 @@ class Player
         @move {x:1, y:0}
       when VK_SPACE
         @use()
+      when VK_H
+        @hackSecurityTerminal()
       when VK_M
         @openPocketComputer()
       when VK_S
@@ -138,6 +146,35 @@ class Player
   hasPuzzle: (index) ->
     matching = (puzzle for puzzle in @puzzle when puzzle is index)
     return matching.length > 0
+
+  hackSecurityTerminal: ->
+    foundIt = false
+    {sfx, state} = window.game
+    sfx.playSound 'dial-a-hack'
+    state.timeLimit -= TIME_PENALTY_HACK
+    # figure out what we might use here
+    objHere = state.getObjectsAt @x, @y
+    for obj in objHere
+      # if this is a searchable piece of furniture
+      switch obj.ch
+        when "S"
+          foundIt = true
+    # determine which reward will be used
+    if not foundIt
+      reward = "NEEDTERM"
+    else
+      if ROT.RNG.getUniform() < CHANCE_HACK_SUCCEED
+        if ROT.RNG.getUniform() < 0.5
+          reward = "HACKLIFT"
+        else
+          reward = "HACKSNOOZE"
+      else
+        reward = "HACKNONE"
+    # define the function
+    rewardResult = -> 
+      state.addReward reward
+      window.game.gui.render window.game.state
+    setTimeout rewardResult, 7000
 
 exports.Player = Player
 
