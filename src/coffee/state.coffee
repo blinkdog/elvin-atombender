@@ -3,7 +3,7 @@
 #----------------------------------------------------------------------
 
 CHANCE_DEATHBALL = 0.1
-CHANCE_PASSWORD = 0.1
+CHANCE_PASSWORD = 0.2
 CHANCE_PUZZLE = 0.3
 
 MIN_PITS = 0

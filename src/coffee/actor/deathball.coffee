@@ -10,11 +10,13 @@ class DeathBall
     @fg = '#000'
     @desc = 'Death Ball'
     @visible = true
+    @disabled = false
     @speed = 50 # Math.floor(player.speed / 2)
     
   getSpeed: -> @speed
   
   act: ->
+    return if @disabled
     {player} = window.game.state
     xDir = sign(player.x-@x)
     yDir = sign(player.y-@y)

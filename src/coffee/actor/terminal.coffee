@@ -6,8 +6,10 @@
 {VK_DOWN, VK_SPACE, VK_UP} = ROT
 
 {EnablePits} = require './enablePits'
+{EnableRobots} = require './enableRobots'
 
-TURNS_DISABLE_PITS = 40
+TURNS_DISABLE_PITS = 50
+TURNS_DISABLE_ROBOTS = 50
 
 class Terminal
   constructor: (@x, @y, @layoutRoom)->
@@ -48,7 +50,7 @@ class Terminal
   disablePits: ->
     {state} = window.game
     {player} = state
-    if player.lift < 0
+    if player.lift <= 0
       @required = true
       return
     player.lift--
@@ -63,8 +65,20 @@ class Terminal
       pit.visible = true
 
   disableRobots: ->
-    @cursor = @cursor
+    {state} = window.game
+    {player} = state
+    if player.snooze <= 0
+      @required = true
+      return
+    player.snooze--
     @accepted = true
+    # disable robots
+    robots = state.objects.filter (value, index, array) =>
+      return ((value.ch is 'R') or (value.ch is '⬤')) and (value.layoutRoom.x is @layoutRoom.x) and (value.layoutRoom.y is @layoutRoom.y)
+    enableRobots = new EnableRobots robots, TURNS_DISABLE_ROBOTS
+    window.game.scheduler.add enableRobots, true
+    for robot in robots
+      robot.disabled = true
 
   logOffSecurityTerminal: ->
     delete window.game.state.securityTerminal

@@ -18,6 +18,7 @@ class Robot
     @fg = '#600'
     @desc = 'Robot Guard'
     @visible = true
+    @disabled = false
     
     @speed = Math.floor(ROT.RNG.getUniform() * (MAX_SPEED-MIN_SPEED)) + MIN_SPEED
     @behavior = BEHAVIOR_TYPES.random()
@@ -28,6 +29,8 @@ class Robot
   getSpeed: -> @speed
   
   act: ->
+    @elec = []
+    return if @disabled
     {player} = window.game.state
     # figure out where we want to go
     switch @behavior
@@ -53,7 +56,6 @@ class Robot
       @lastAction = "PIVOT"
       @patrolDir *= -1
     # figure out where we want to zap
-    @elec = []
     switch @electric
       when "PIVOT"
         if @lastAction is "PIVOT"
