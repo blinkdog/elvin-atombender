@@ -5,7 +5,7 @@
 {exec} = require 'child_process'
 
 task 'dist', 'Create ElvinRL distribution tarball', ->
-  console.log 'UnsupportedOperationException'
+  clean -> compile -> copy -> browser -> test -> tar()
 
 task 'rebuild', 'Rebuild ElvinRL', ->
   clean -> compile -> copy -> browser -> test()
@@ -30,6 +30,11 @@ copy = (next) ->
     throw err if err
     next?()
 
+tar = (next) ->
+  exec 'tar cvzf ElvinRL.tar.gz ElvinRL.html ElvinRL.css ElvinRL.js sfx', (err, stdout, stderr) ->
+    throw err if err
+    next?()
+
 test = (next) ->
   exec 'mocha --compilers coffee:coffee-script/register --recursive', (err, stdout, stderr) ->
     console.log stdout + stderr
@@ -37,4 +42,3 @@ test = (next) ->
 
 #----------------------------------------------------------------------
 # end of Cakefile
-

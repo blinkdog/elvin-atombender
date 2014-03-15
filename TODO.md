@@ -1,10 +1,3 @@
-# Release TO DO
-* [X] Remove errant debugging calls hanging around
-** [X] Search all files for "alert"
-** [X] Search all files for "DEBUG"
-** [X] Search all files for "console"
-** [X] Search all files for "TODO"
-
 # TO Wish I Had Enough Time To DO
 * Fix the hackish stuff in the code
 * Add storyline modal dialogs at the outset of the game
