@@ -74,8 +74,8 @@ class Robot
     for obj in objHere
       continue if obj is this
       switch obj.ch
-        # another robot or pit trap
-        when "R", "▒"
+        # another robot, a pit trap, or a death ball
+        when "R", "▒", "⬤"
           return false
     # tell the caller we're allowed to move there
     return true
@@ -87,7 +87,7 @@ class Robot
   checkCollide: ->
     {player} = window.game.state 
     if (@x is player.x) and (@y is player.y)
-      window.game.state.zap()
+      window.game.state.collide()
 
   canZap: ->
     @dischargeWeapon()

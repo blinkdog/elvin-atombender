@@ -6,10 +6,9 @@
 ** Search all files for "TODO"
 
 # Development TO DO
-* [X] Modify Robot to move around, fire lightning
-* Create DeathBall object
-* Modify GameState to add DeathBall objects to game
-* Modify DeathBall to seek out player
+* [X] Create DeathBall object
+* [X] Modify GameState to add DeathBall objects to game
+* [X] Modify DeathBall to seek out player
 * Modify Player use routine to allow SecurityTerminal objects to temporarily lock the pit traps in a room
 * Modify SecurityTerminal to lock and eventually unlock the pit traps
 * Modify Player use routine to allow SecurityTerminal objects to temporarily disable the robots in a room

@@ -2,6 +2,7 @@
 # Copyright 2014 Patrick Meade. All rights reserved.
 #----------------------------------------------------------------------
 
+CHANCE_DEATHBALL = 0.1
 CHANCE_PASSWORD = 0.1
 CHANCE_PUZZLE = 0.3
 
@@ -28,6 +29,7 @@ Layout = require './layout'
 Map = require './map'
 {ROOM_SIZE} = require './map'
 {AccessPanel} = require './actor/access'
+{DeathBall} = require './actor/deathball'
 {Elvin} = require './actor/atombender'
 {Furniture} = require './actor/furniture'
 {MissionAccomplished} = require './actor/endWin'
@@ -142,6 +144,7 @@ class GameState
     @initPitTraps()
     @initFurniture()
     @initRobots()
+    @initDeathBalls()
 
   initPuzzles: ->
     @puzzles = []
@@ -306,6 +309,25 @@ class GameState
                 @addRobot j, i, {x:robotRoomOffsetX, y:robotRoomOffsetY}
                 numRobots--
 
+  initDeathBalls: ->
+    for i in [0..@layout.length-1]
+      for j in [0..@layout[i].length-1]
+        switch @layout[i][j]
+          when "R"
+            if ROT.RNG.getUniform() < CHANCE_DEATHBALL
+              numDeathBalls = 1
+            else
+              numDeathBalls = 0
+            while numDeathBalls > 0
+              deathBallRoomOffsetX = Math.floor(ROT.RNG.getUniform() * ROOM_SIZE.width)
+              deathBallRoomOffsetY = Math.floor(ROT.RNG.getUniform() * ROOM_SIZE.height)
+              deathBallMapX = j*ROOM_SIZE.width + deathBallRoomOffsetX
+              deathBallMapY = i*ROOM_SIZE.height + deathBallRoomOffsetY
+              alreadyHere = @getObjectsAt deathBallMapX, deathBallMapY
+              if alreadyHere.length is 0
+                @addDeathBall j, i, {x:deathBallRoomOffsetX, y:deathBallRoomOffsetY}
+                numDeathBalls--
+
   addSecurityTerminal: (layoutX, layoutY, mapOffset) ->
     mapX = layoutX*ROOM_SIZE.width
     mapY = layoutY*ROOM_SIZE.height
@@ -357,6 +379,15 @@ class GameState
     robot = new Robot robotX, robotY, {x:layoutX, y:layoutY}
     @objects.push robot
     window.game.scheduler.add robot, true
+
+  addDeathBall: (layoutX, layoutY, mapOffset) ->
+    mapX = layoutX*ROOM_SIZE.width
+    mapY = layoutY*ROOM_SIZE.height
+    deathBallX = mapX + mapOffset.x
+    deathBallY = mapY + mapOffset.y
+    deathBall = new DeathBall deathBallX, deathBallY, {x:layoutX, y:layoutY}
+    @objects.push deathBall
+    window.game.scheduler.add deathBall, true
 
   getObjectsAt: (x,y) ->
     (object for object in @objects when object.x is x and object.y is y)
